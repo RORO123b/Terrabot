@@ -3,6 +3,8 @@ package main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.CommandInput;
 import fileio.InputLoader;
 
 import java.io.File;
@@ -43,6 +45,13 @@ public class Main {
          * output.add(objectNode);
          *
          */
+
+        for (CommandInput command : inputLoader.getCommands()) {
+            ObjectNode commandNode = MAPPER.createObjectNode();
+            commandNode.put("command", command.command);
+
+            if(command.command.equals("startSimulation"));
+        }
 
         File outputFile = new File(outputPath);
         outputFile.getParentFile().mkdirs();
