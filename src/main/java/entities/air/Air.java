@@ -10,7 +10,7 @@ import lombok.Setter;
 public abstract class Air extends Entity {
     protected static final double PERCENT = 100;
     protected static final double PERCENT_DECIMAL = 100.0;
-    
+
     protected double humidity;
     protected double temperature;
     protected double oxygenLevel;
@@ -23,7 +23,7 @@ public abstract class Air extends Entity {
      * @return The maximum score
      */
     public abstract int getMaxScore();
-    
+
     /**
      * Sets the air quality based on specific air type factors
      */

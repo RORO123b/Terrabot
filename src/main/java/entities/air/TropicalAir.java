@@ -11,7 +11,7 @@ public class TropicalAir extends Air {
     private static final double CO2_FACTOR = 0.01;
     private static final double OXYGEN_FACTOR = 2;
     private static final double MAX_SCORE_VALUE = 82;
-    
+
     private double co2Level;
 
     /**

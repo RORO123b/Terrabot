@@ -10,7 +10,7 @@ import lombok.Setter;
 public abstract class Animal extends Entity {
     protected static final double DIVISOR = 10.0;
     protected static final int BASE = 100;
-    
+
     protected String type;
     protected double animalPossibility;
 

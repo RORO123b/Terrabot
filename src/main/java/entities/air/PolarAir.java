@@ -11,7 +11,7 @@ public class PolarAir extends Air {
     private static final double ICE_FACTOR = 0.05;
     private static final double OXYGEN_FACTOR = 2;
     private static final double MAX_SCORE_VALUE = 142;
-    
+
     private double iceCrystalConcentration;
 
     /**

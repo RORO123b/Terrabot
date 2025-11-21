@@ -11,7 +11,7 @@ public class TemperateAir extends Air {
     private static final double POLLEN_FACTOR = 0.1;
     private static final double OXYGEN_FACTOR = 2;
     private static final double MAX_SCORE_VALUE = 84;
-    
+
     private double pollenLevel;
 
     /**

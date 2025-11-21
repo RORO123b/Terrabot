@@ -11,7 +11,7 @@ public class DesertAir extends Air {
     private static final double TEMP_FACTOR = 0.3;
     private static final double OXYGEN_FACTOR = 2;
     private static final double MAX_SCORE_VALUE = 65;
-    
+
     private double dustParticles;
 
     /**

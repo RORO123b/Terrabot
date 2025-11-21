@@ -108,7 +108,9 @@ public final class Main {
                     break;
 
                 case "printEnvConditions":
-                    if (simulationActive && map != null && robot != null) {
+                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
                         Cell currentCell = map.getCell(robot.getX(), robot.getY());
                         ObjectNode envOutput = MAPPER.createObjectNode();
 
@@ -130,6 +132,9 @@ public final class Main {
                         }
 
                         commandNode.set("output", envOutput);
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
                     } else {
                         commandNode.put("message",
                                 "ERROR: Simulation not started. Cannot perform action");
@@ -138,7 +143,9 @@ public final class Main {
                     break;
 
                 case "printMap":
-                    if (simulationActive && map != null) {
+                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
                         ArrayNode mapOutput = MAPPER.createArrayNode();
 
                         for (int y = 0; y < map.getHeight(); y++) {
@@ -158,8 +165,12 @@ public final class Main {
                                 mapOutput.add(cellNode);
                             }
                         }
+                        Robot.checkBatteryCharging(command.getTimestamp());
 
                         commandNode.set("output", mapOutput);
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
                     } else {
                         commandNode.put("message",
                                 "ERROR: Simulation not started. Cannot perform action");
@@ -174,9 +185,46 @@ public final class Main {
                     break;
 
                 case "moveRobot":
-                    if (simulationActive && map != null && robot != null) {
+                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
                         String moveResult = robot.moveRobot(map);
                         commandNode.put("message", moveResult);
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
+                    commandNode.put("timestamp", command.getTimestamp());
+                    break;
+
+                case "rechargeBattery":
+                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
+                        robot.rechargeBattery(command.getTimeToCharge(), command.getTimestamp());
+                        commandNode.put("message", "Robot battery is charging.");
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
+                    commandNode.put("timestamp", command.getTimestamp());
+                break;
+
+                case "getEnergyStatus":
+                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "TerraBot has " + robot.getEnergyPoints() + " energy points left.");
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
                     } else {
                         commandNode.put("message",
                                 "ERROR: Simulation not started. Cannot perform action");
@@ -186,6 +234,7 @@ public final class Main {
                 default:
                     commandNode.put("timestamp", command.getTimestamp());
                     break;
+
             }
 
             output.add(commandNode);

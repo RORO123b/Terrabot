@@ -12,6 +12,8 @@ public class Robot {
     private int x;
     private int y;
     private int energyPoints;
+    private static boolean isCharging = false;
+    private static int timestampReady = -1;
 
     public Robot(final int energyPoints) {
         x = 0;
@@ -30,7 +32,7 @@ public class Robot {
         int minn = Integer.MAX_VALUE;
         int bestX = x;
         int bestY = y;
-        System.out.println("ROBOT AT POSITION (" + x + ", " + y + ") with energy " + energyPoints);
+
         for (int k = 0; k < DIRECTIONS; k++) {
             int total = 0;
             int tempX = x + dx[k];
@@ -38,44 +40,45 @@ public class Robot {
             if (tempX >= 0 && tempX < map.getWidth()
                     && tempY >= 0 && tempY < map.getHeight()) {
                 double possibilityToGetStuckInSoil = 0;
+
                 if (map.getCell(tempX, tempY).getSoil() != null) {
                     possibilityToGetStuckInSoil =
                             map.getCell(tempX, tempY).getSoil().possibilityToGetStuckInSoil();
                     total++;
                 }
-                System.out.println("Possibility to get stuck in soil at (" + tempX + ", " + tempY + "): "
-                        + possibilityToGetStuckInSoil);
+
                 double possibilityToGetDamagedByAir = 0;
+
                 if (map.getCell(tempX, tempY).getAir() != null) {
                     possibilityToGetDamagedByAir =
                             map.getCell(tempX, tempY).getAir().getToxicityAQ();
                     total++;
                 }
-                System.out.println("Possibility to get damaged by air at (" + tempX + ", " + tempY + "): "
-                        + possibilityToGetDamagedByAir);
+
                 double possibilityToBeAttackedByAnimal = 0;
+
                 if (map.getCell(tempX, tempY).getAnimal() != null) {
                     possibilityToBeAttackedByAnimal =
                             map.getCell(tempX, tempY).getAnimal()
                                     .getPossibilityToBeAttackedByAnimal();
                     total++;
                 }
-                System.out.println("Possibility to be attacked by animal at (" + tempX + ", " + tempY + "): "
-                        + possibilityToBeAttackedByAnimal);
+
                 double possibilityToGetStuckInPlants = 0;
+
                 if (map.getCell(tempX, tempY).getPlant() != null) {
                     possibilityToGetStuckInPlants =
                             map.getCell(tempX, tempY).getPlant()
                                     .getPossibilityToGetStuckInPlants();
                     total++;
                 }
-                System.out.println("Possibility to get stuck in plants at (" + tempX + ", " + tempY + "): "
-                        + possibilityToGetStuckInPlants);
+
                 double sum = possibilityToGetStuckInSoil + possibilityToGetDamagedByAir
                         + possibilityToBeAttackedByAnimal + possibilityToGetStuckInPlants;
+
                 double mean = Math.abs(sum / total);
                 int result = (int) Math.round(mean);
-                System.out.println("Result for cell (" + tempX + ", " + tempY + "): " + result);
+
                 if (result < minn && energyPoints >= result) {
                     minn = result;
                     bestX = tempX;
@@ -91,5 +94,22 @@ public class Robot {
         energyPoints -= minn;
 
         return "The robot has successfully moved to position (" + x + ", " + y + ").";
+    }
+
+    public final void rechargeBattery(final int timeToCharge, final int currentTime) {
+        isCharging = true;
+        timestampReady = currentTime + timeToCharge;
+        this.energyPoints += timeToCharge;
+    }
+
+    public final boolean getIsCharging() {
+        return isCharging;
+    }
+
+    public static final void checkBatteryCharging(final int currentTime) {
+        if (isCharging && timestampReady <= currentTime) {
+            isCharging = false;
+            timestampReady = -1;
+        }
     }
 }
