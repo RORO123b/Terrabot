@@ -13,14 +13,13 @@ public class DesertAir extends Air {
     private static final double MAX_SCORE_VALUE = 65;
     
     private double dustParticles;
-    private final double maxScore = MAX_SCORE_VALUE;
 
     /**
      * Gets the maximum score for desert air.
      * @return The maximum score
      */
     public int getMaxScore() {
-        return (int) maxScore;
+        return (int) MAX_SCORE_VALUE;
     }
 
     /**

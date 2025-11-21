@@ -11,7 +11,8 @@ public abstract class Plant extends Entity {
     protected static final double YOUNG_RATE = 0.2;
     protected static final double MATURE_RATE = 0.7;
     protected static final double OXYGEN_RATE = 0.4;
-    
+    protected static final double POSSIBILITY_DIVISOR = 100.0;
+
     protected String type;
     protected double maturityOxygenRate;
     protected double oxygenLevel;
@@ -37,5 +38,13 @@ public abstract class Plant extends Entity {
      */
     public void calculateOxygenLevel() {
         this.oxygenLevel = this.oxygenLevel + this.maturityOxygenRate + this.oxygenFromPlant;
+    }
+
+    /**
+     * Gets the possibility to get stuck in plants.
+     * @return The possibility as a decimal value
+     */
+    public double getPossibilityToGetStuckInPlants() {
+        return plantPossibility / POSSIBILITY_DIVISOR;
     }
 }

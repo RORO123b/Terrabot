@@ -13,14 +13,13 @@ public class TropicalAir extends Air {
     private static final double MAX_SCORE_VALUE = 82;
     
     private double co2Level;
-    private final double maxScore = MAX_SCORE_VALUE;
 
     /**
      * Gets the maximum score for tropical air.
      * @return The maximum score
      */
     public int getMaxScore() {
-        return (int) maxScore;
+        return (int) MAX_SCORE_VALUE;
     }
 
     /**

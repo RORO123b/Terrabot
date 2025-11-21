@@ -97,9 +97,8 @@ public final class Main {
                         int height = Integer.parseInt(dims[1]);
 
                         map = new Map(height, width);
-                        robot = new Robot();
+                        robot = new Robot(sim.getEnergyPoints());
 
-                        // Initialize all cells with entities
                         initializeMap(map, sim.getTerritorySectionParams());
 
                         simulationActive = true;
@@ -131,6 +130,9 @@ public final class Main {
                         }
 
                         commandNode.set("output", envOutput);
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
                     break;
@@ -158,6 +160,9 @@ public final class Main {
                         }
 
                         commandNode.set("output", mapOutput);
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
                     break;
@@ -168,6 +173,16 @@ public final class Main {
                     commandNode.put("timestamp", command.getTimestamp());
                     break;
 
+                case "moveRobot":
+                    if (simulationActive && map != null && robot != null) {
+                        String moveResult = robot.moveRobot(map);
+                        commandNode.put("message", moveResult);
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
+                    commandNode.put("timestamp", command.getTimestamp());
+                    break;
                 default:
                     commandNode.put("timestamp", command.getTimestamp());
                     break;

@@ -13,14 +13,13 @@ public class PolarAir extends Air {
     private static final double MAX_SCORE_VALUE = 142;
     
     private double iceCrystalConcentration;
-    private final double maxScore = MAX_SCORE_VALUE;
 
     /**
      * Gets the maximum score for polar air.
      * @return The maximum score
      */
     public int getMaxScore() {
-        return (int) maxScore;
+        return (int) MAX_SCORE_VALUE;
     }
 
     /**

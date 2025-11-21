@@ -19,18 +19,26 @@ public abstract class Air extends Entity {
     private double finalResult;
 
     /**
-     * Gets the maximum score for this air type.
+     * Gets the maximum score for this air type
      * @return The maximum score
      */
     public abstract int getMaxScore();
     
     /**
-     * Sets the air quality based on specific air type factors.
+     * Sets the air quality based on specific air type factors
      */
     public abstract void setAirQuality();
 
     /**
-     * Calculates the toxicity air quality.
+     * Gets the rounded air quality value
+     * @return The rounded air quality
+     */
+    public double getAirQuality() {
+        return Math.round(airQuality * PERCENT_DECIMAL) / PERCENT_DECIMAL;
+    }
+
+    /**
+     * Calculates the toxicity air quality
      */
     public void calculateToxicityAQ() {
         toxicityAQ = PERCENT * (1 - airQuality / getMaxScore());
