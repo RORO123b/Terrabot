@@ -34,7 +34,7 @@ public final class Map {
      */
     public Cell getCell(final int x, final int y) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
-            return cells[y][x];
+            return cells[x][y];
         }
         return null;
     }

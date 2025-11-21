@@ -109,7 +109,7 @@ public final class Main {
 
                 case "printEnvConditions":
                     if (simulationActive && map != null && robot != null) {
-                        Cell currentCell = map.getCell(robot.getI(), robot.getJ());
+                        Cell currentCell = map.getCell(robot.getX(), robot.getY());
                         ObjectNode envOutput = MAPPER.createObjectNode();
 
                         if (currentCell.getSoil() != null) {

@@ -8,16 +8,14 @@ import lombok.Setter;
 
 public class Robot {
     private static final int DIRECTIONS = 4;
-    private static final int DIVISOR = 4;
-    private static final int MIN_ENERGY = 2;
 
-    private int i;
-    private int j;
+    private int x;
+    private int y;
     private int energyPoints;
 
     public Robot(final int energyPoints) {
-        i = 0;
-        j = 0;
+        x = 0;
+        y = 0;
         this.energyPoints = energyPoints;
     }
 
@@ -27,57 +25,71 @@ public class Robot {
      * @return A message indicating the result of the move
      */
     public final String moveRobot(final Map map) {
-        if (energyPoints < MIN_ENERGY) {
-            return "ERROR: Not enough battery left. Cannot perform action";
-        }
         int[] dx = {0, 1, 0, -1};
         int[] dy = {1, 0, -1, 0};
-        int maxx = -1;
-
+        int minn = Integer.MAX_VALUE;
+        int bestX = x;
+        int bestY = y;
+        System.out.println("ROBOT AT POSITION (" + x + ", " + y + ") with energy " + energyPoints);
         for (int k = 0; k < DIRECTIONS; k++) {
-            int tempI = i + dx[k];
-            int tempJ = j + dy[k];
-            if (tempI >= 0 && tempI < map.getHeight()
-                    && tempJ >= 0 && tempJ < map.getWidth()) {
+            int total = 0;
+            int tempX = x + dx[k];
+            int tempY = y + dy[k];
+            if (tempX >= 0 && tempX < map.getWidth()
+                    && tempY >= 0 && tempY < map.getHeight()) {
                 double possibilityToGetStuckInSoil = 0;
-                if (map.getCell(tempJ, tempI).getSoil() != null) {
+                if (map.getCell(tempX, tempY).getSoil() != null) {
                     possibilityToGetStuckInSoil =
-                            map.getCell(tempJ, tempI).getSoil().possibilityToGetStuckInSoil();
+                            map.getCell(tempX, tempY).getSoil().possibilityToGetStuckInSoil();
+                    total++;
                 }
-
+                System.out.println("Possibility to get stuck in soil at (" + tempX + ", " + tempY + "): "
+                        + possibilityToGetStuckInSoil);
                 double possibilityToGetDamagedByAir = 0;
-                if (map.getCell(tempJ, tempI).getAir() != null) {
+                if (map.getCell(tempX, tempY).getAir() != null) {
                     possibilityToGetDamagedByAir =
-                            map.getCell(tempJ, tempI).getAir().getToxicityAQ();
+                            map.getCell(tempX, tempY).getAir().getToxicityAQ();
+                    total++;
                 }
-
+                System.out.println("Possibility to get damaged by air at (" + tempX + ", " + tempY + "): "
+                        + possibilityToGetDamagedByAir);
                 double possibilityToBeAttackedByAnimal = 0;
-                if (map.getCell(tempJ, tempI).getAnimal() != null) {
+                if (map.getCell(tempX, tempY).getAnimal() != null) {
                     possibilityToBeAttackedByAnimal =
-                            map.getCell(tempJ, tempI).getAnimal()
+                            map.getCell(tempX, tempY).getAnimal()
                                     .getPossibilityToBeAttackedByAnimal();
+                    total++;
                 }
-
+                System.out.println("Possibility to be attacked by animal at (" + tempX + ", " + tempY + "): "
+                        + possibilityToBeAttackedByAnimal);
                 double possibilityToGetStuckInPlants = 0;
-                if (map.getCell(tempJ, tempI).getPlant() != null) {
+                if (map.getCell(tempX, tempY).getPlant() != null) {
                     possibilityToGetStuckInPlants =
-                            map.getCell(tempJ, tempI).getPlant()
+                            map.getCell(tempX, tempY).getPlant()
                                     .getPossibilityToGetStuckInPlants();
+                    total++;
                 }
-
+                System.out.println("Possibility to get stuck in plants at (" + tempX + ", " + tempY + "): "
+                        + possibilityToGetStuckInPlants);
                 double sum = possibilityToGetStuckInSoil + possibilityToGetDamagedByAir
                         + possibilityToBeAttackedByAnimal + possibilityToGetStuckInPlants;
-                double mean = Math.abs(sum / DIVISOR);
+                double mean = Math.abs(sum / total);
                 int result = (int) Math.round(mean);
-                if (result > maxx) {
-                    maxx = result;
-                    i = tempI;
-                    j = tempJ;
+                System.out.println("Result for cell (" + tempX + ", " + tempY + "): " + result);
+                if (result < minn && energyPoints >= result) {
+                    minn = result;
+                    bestX = tempX;
+                    bestY = tempY;
                 }
             }
         }
-        energyPoints -= MIN_ENERGY;
+        if(minn == Integer.MAX_VALUE) {
+            return "ERROR: Not enough battery left. Cannot perform action";
+        }
+        x = bestX;
+        y = bestY;
+        energyPoints -= minn;
 
-        return "The robot has successfully moved to position (" + i + ", " + j + ").";
+        return "The robot has successfully moved to position (" + x + ", " + y + ").";
     }
 }
