@@ -13,6 +13,7 @@ public class PolarAir extends Air {
     private static final double MAX_SCORE_VALUE = 142;
 
     private double iceCrystalConcentration;
+    private double windSpeed;
 
     /**
      * Gets the maximum score for polar air.
@@ -28,5 +29,16 @@ public class PolarAir extends Air {
     public void setAirQuality() {
         this.airQuality = (oxygenLevel * OXYGEN_FACTOR) + (TEMP_FACTOR - Math.abs(temperature))
                 - (iceCrystalConcentration * ICE_FACTOR);
+    }
+
+    /**
+     * Changes weather by setting wind speed.
+     * @param windSpeed The wind speed
+     */
+
+    @Override
+    public void changeWeather(final double windSpeed) {
+        this.windSpeed = windSpeed;
+        setAirQuality();
     }
 }

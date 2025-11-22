@@ -15,8 +15,8 @@ public final class Cell {
     private static final double QUALITY_LOW = 40.0;
     private static final double QUALITY_MEDIUM = 70.0;
 
-    private int i;
-    private int j;
+    private int y;
+    private int x;
     private Air air;
     private Animal animal;
     private Plant plant;
@@ -24,6 +24,18 @@ public final class Cell {
     private Water water;
     private String airQuality;
     private String soilQuality;
+    private int timestampWeatherFinished = -1;
+
+    /**
+     * Constructor for Cell class.
+     *
+     * @param x X coordinate of the cell
+     * @param y Y coordinate of the cell
+     */
+    public Cell(final int x, final int y) {
+        this.y = y;
+        this.x = x;
+    }
 
     /**
      * Counts how many non-null objects exist in this cell.

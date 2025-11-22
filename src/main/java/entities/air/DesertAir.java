@@ -11,8 +11,10 @@ public class DesertAir extends Air {
     private static final double TEMP_FACTOR = 0.3;
     private static final double OXYGEN_FACTOR = 2;
     private static final double MAX_SCORE_VALUE = 65;
+    private static final double STORM_PENALTY = 30;
 
     private double dustParticles;
+    private boolean desertStorm;
 
     /**
      * Gets the maximum score for desert air.
@@ -27,6 +29,17 @@ public class DesertAir extends Air {
      */
     public void setAirQuality() {
         this.airQuality = (oxygenLevel * OXYGEN_FACTOR) - (dustParticles * DUST_FACTOR)
-                - (temperature * TEMP_FACTOR);
+                - (temperature * TEMP_FACTOR) - (desertStorm ? STORM_PENALTY : 0);
+    }
+
+    /**
+     * Changes weather by setting desert storm condition.
+     * @param desertStorm Whether there is a desert storm
+     */
+    @Override
+    public void changeWeather(final boolean desertStorm) {
+        this.desertStorm = desertStorm;
+
+        setAirQuality();
     }
 }

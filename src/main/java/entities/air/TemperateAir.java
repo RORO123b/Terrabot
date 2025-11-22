@@ -11,8 +11,10 @@ public class TemperateAir extends Air {
     private static final double POLLEN_FACTOR = 0.1;
     private static final double OXYGEN_FACTOR = 2;
     private static final double MAX_SCORE_VALUE = 84;
+    private static final double SPRING_PENALTY = 15;
 
     private double pollenLevel;
+    private String season = "";
 
     /**
      * Gets the maximum score for temperate air.
@@ -27,6 +29,16 @@ public class TemperateAir extends Air {
      */
     public void setAirQuality() {
         this.airQuality = (oxygenLevel * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
-                - (pollenLevel * POLLEN_FACTOR);
+                - (pollenLevel * POLLEN_FACTOR) - (season.equalsIgnoreCase("Spring") ? SPRING_PENALTY : 0);
+    }
+
+    /**
+     * Changes weather by setting the season.
+     * @param season The season name
+     */
+    @Override
+    public void changeWeather(final String season) {
+        this.season = season;
+        setAirQuality();
     }
 }

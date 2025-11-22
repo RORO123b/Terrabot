@@ -12,8 +12,8 @@ public class Robot {
     private int x;
     private int y;
     private int energyPoints;
-    private static boolean isCharging = false;
-    private static int timestampReady = -1;
+    private boolean isCharging = false;
+    private int timestampReady = -1;
 
     public Robot(final int energyPoints) {
         x = 0;
@@ -86,7 +86,7 @@ public class Robot {
                 }
             }
         }
-        if(minn == Integer.MAX_VALUE) {
+        if (minn == Integer.MAX_VALUE) {
             return "ERROR: Not enough battery left. Cannot perform action";
         }
         x = bestX;
@@ -96,6 +96,11 @@ public class Robot {
         return "The robot has successfully moved to position (" + x + ", " + y + ").";
     }
 
+    /**
+     * Recharges the robot's battery.
+     * @param timeToCharge The time needed to charge
+     * @param currentTime The current timestamp
+     */
     public final void rechargeBattery(final int timeToCharge, final int currentTime) {
         isCharging = true;
         timestampReady = currentTime + timeToCharge;
@@ -106,7 +111,11 @@ public class Robot {
         return isCharging;
     }
 
-    public static final void checkBatteryCharging(final int currentTime) {
+    /**
+     * Checks if battery charging is complete.
+     * @param currentTime The current timestamp
+     */
+    public final void checkBatteryCharging(final int currentTime) {
         if (isCharging && timestampReady <= currentTime) {
             isCharging = false;
             timestampReady = -1;

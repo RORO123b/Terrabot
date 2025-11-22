@@ -108,7 +108,14 @@ public final class Main {
                     break;
 
                 case "printEnvConditions":
-                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                    }
+
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
                         Cell currentCell = map.getCell(robot.getX(), robot.getY());
@@ -143,7 +150,14 @@ public final class Main {
                     break;
 
                 case "printMap":
-                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                    }
+
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
                         ArrayNode mapOutput = MAPPER.createArrayNode();
@@ -165,8 +179,6 @@ public final class Main {
                                 mapOutput.add(cellNode);
                             }
                         }
-                        Robot.checkBatteryCharging(command.getTimestamp());
-
                         commandNode.set("output", mapOutput);
                     } else if (robot != null && robot.getIsCharging()) {
                         commandNode.put("message",
@@ -185,7 +197,14 @@ public final class Main {
                     break;
 
                 case "moveRobot":
-                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                    }
+
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
                         String moveResult = robot.moveRobot(map);
@@ -201,7 +220,14 @@ public final class Main {
                     break;
 
                 case "rechargeBattery":
-                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                    }
+
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
                         robot.rechargeBattery(command.getTimeToCharge(), command.getTimestamp());
@@ -217,7 +243,14 @@ public final class Main {
                 break;
 
                 case "getEnergyStatus":
-                    Robot.checkBatteryCharging(command.getTimestamp());
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                    }
+
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
                         commandNode.put("message",
@@ -225,6 +258,50 @@ public final class Main {
                     } else if (robot != null && robot.getIsCharging()) {
                         commandNode.put("message",
                                 "ERROR: Robot still charging. Cannot perform action");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
+                    commandNode.put("timestamp", command.getTimestamp());
+                    break;
+
+                case "changeWeatherConditions":
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                        String type = command.getType();
+                        double value = 0;
+                        String season = null;
+                        String airType = null;
+
+                        switch (type) {
+                            case "desertStorm":
+                                airType = "DesertAir";
+                                map.changeWeather(airType, true, command.getTimestamp());
+                                break;
+                            case "peopleHiking":
+                                airType = "MountainAir";
+                                value = command.getNumberOfHikers();
+                                map.changeWeather(airType, value, command.getTimestamp());
+                                break;
+                            case "newSeason":
+                                airType = "TemperateAir";
+                                season = command.getSeason();
+                                map.changeWeather(airType, season, command.getTimestamp());
+                                break;
+                            case "polarStorm":
+                                airType = "PolarAir";
+                                value = command.getWindSpeed();
+                                map.changeWeather(airType, value, command.getTimestamp());
+                                break;
+                            case "rainfall":
+                                airType = "TropicalAir";
+                                value = command.getRainfall();
+                                map.changeWeather(airType, value, command.getTimestamp());
+                                break;
+                            default:
+                                break;
+                        }
+                        commandNode.put("message", "The weather has changed.");
                     } else {
                         commandNode.put("message",
                                 "ERROR: Simulation not started. Cannot perform action");
@@ -547,7 +624,7 @@ public final class Main {
                 node.put("iceCrystalConcentration", ((PolarAir) air).getIceCrystalConcentration());
                 break;
             case "DesertAir":
-                node.put("dustParticles", ((DesertAir) air).getDustParticles());
+                node.put("desertStorm", ((DesertAir) air).isDesertStorm());
                 break;
             case "MountainAir":
                 node.put("altitude", ((MountainAir) air).getAltitude());

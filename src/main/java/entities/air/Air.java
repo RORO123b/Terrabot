@@ -44,4 +44,23 @@ public abstract class Air extends Entity {
         toxicityAQ = PERCENT * (1 - airQuality / getMaxScore());
         finalResult = Math.round(toxicityAQ * PERCENT_DECIMAL) / PERCENT_DECIMAL;
     }
+
+    /**
+     * Changes weather with a numeric value
+     * @param value The numeric weather parameter
+     */
+    public void changeWeather(final double value) { }
+
+    /**
+     * Changes weather with a season string
+     * @param season The season name
+     */
+    public void changeWeather(final String season) { }
+
+    /**
+     * Changes weather with a boolean condition
+     * @param condition The weather condition
+     */
+    public void changeWeather(final boolean condition) { }
+
 }
