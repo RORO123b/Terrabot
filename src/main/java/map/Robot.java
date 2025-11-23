@@ -1,4 +1,5 @@
 package map;
+import entities.plants.Plant;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 public class Robot {
     private static final int DIRECTIONS = 4;
+    private static final int SCAN_ENERGY_COST = 7;
 
     private int x;
     private int y;
@@ -34,26 +36,20 @@ public class Robot {
         int bestY = y;
 
         for (int k = 0; k < DIRECTIONS; k++) {
-            int total = 0;
+            int total = 2;
             int tempX = x + dx[k];
             int tempY = y + dy[k];
             if (tempX >= 0 && tempX < map.getWidth()
                     && tempY >= 0 && tempY < map.getHeight()) {
                 double possibilityToGetStuckInSoil = 0;
 
-                if (map.getCell(tempX, tempY).getSoil() != null) {
-                    possibilityToGetStuckInSoil =
-                            map.getCell(tempX, tempY).getSoil().possibilityToGetStuckInSoil();
-                    total++;
-                }
+                possibilityToGetStuckInSoil =
+                        map.getCell(tempX, tempY).getSoil().possibilityToGetStuckInSoil();
 
-                double possibilityToGetDamagedByAir = 0;
-
-                if (map.getCell(tempX, tempY).getAir() != null) {
-                    possibilityToGetDamagedByAir =
-                            map.getCell(tempX, tempY).getAir().getToxicityAQ();
-                    total++;
-                }
+                        double possibilityToGetDamagedByAir = 0;
+                
+                possibilityToGetDamagedByAir =
+                        map.getCell(tempX, tempY).getAir().getToxicityAQ();
 
                 double possibilityToBeAttackedByAnimal = 0;
 
@@ -75,7 +71,6 @@ public class Robot {
 
                 double sum = possibilityToGetStuckInSoil + possibilityToGetDamagedByAir
                         + possibilityToBeAttackedByAnimal + possibilityToGetStuckInPlants;
-
                 double mean = Math.abs(sum / total);
                 int result = (int) Math.round(mean);
 
@@ -120,5 +115,46 @@ public class Robot {
             isCharging = false;
             timestampReady = -1;
         }
+    }
+
+    public String scanObject(String color, String smell, String sound, Map map) {
+        String result;
+        if (energyPoints - SCAN_ENERGY_COST < 0) {
+            return "ERROR: Not enough battery left. Cannot perform action";
+        }
+        energyPoints -= SCAN_ENERGY_COST;
+        if (!color.equals("none") && !smell.equals("none") && sound.equals("none")) {
+            result = "The scanned object is a plant.";
+            if (map.getCell(x, y).getPlant() == null) {
+                return "ERROR: Object not found. Cannot perform action";
+            }
+            Plant scannedPlant = map.getCell(x, y).getPlant();
+            scannedPlant.setGrowing(true);
+            double growthRate = 0;
+            if (map.getCell(x, y).getWater() != null) {
+                growthRate += 0.2;
+            }
+            if (map.getCell(x, y).getSoil() != null) {
+                growthRate += 0.2;
+            }
+            scannedPlant.setGrowthRate(growthRate);
+            scannedPlant.calculateGrowth();
+            // Destroy plant if it has exceeded Old stage
+            if (scannedPlant.shouldBeDestroyed()
+                    && scannedPlant.getGrowthCapacity() >= 1.0) {
+                map.getCell(x, y).setPlant(null);
+            }
+        } else if (!color.equals("none") && !smell.equals("none") && !sound.equals("none")) {
+            result = "The scanned object is an animal.";
+            if (map.getCell(x, y).getAnimal() == null) {
+                return "ERROR: Object not found. Cannot perform action";
+            }
+        } else {
+            result = "The scanned object is water.";
+            if (map.getCell(x, y).getWater() == null) {
+                return "ERROR: Object not found. Cannot perform action";
+            }
+        }
+        return result;
     }
 }

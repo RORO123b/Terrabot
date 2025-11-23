@@ -9,14 +9,12 @@ import lombok.Setter;
 
 public abstract class Air extends Entity {
     protected static final double PERCENT = 100;
-    protected static final double PERCENT_DECIMAL = 100.0;
 
     protected double humidity;
     protected double temperature;
     protected double oxygenLevel;
     protected double airQuality;
     private double toxicityAQ;
-    private double finalResult;
 
     /**
      * Gets the maximum score for this air type
@@ -34,7 +32,12 @@ public abstract class Air extends Entity {
      * @return The rounded air quality
      */
     public double getAirQuality() {
-        return Math.round(airQuality * PERCENT_DECIMAL) / PERCENT_DECIMAL;
+        return Math.round(airQuality * PERCENT) / PERCENT;
+    }
+
+
+    public double getOxygenLevel() {
+        return Math.round(oxygenLevel * PERCENT) / PERCENT;
     }
 
     /**
@@ -42,7 +45,10 @@ public abstract class Air extends Entity {
      */
     public void calculateToxicityAQ() {
         toxicityAQ = PERCENT * (1 - airQuality / getMaxScore());
-        finalResult = Math.round(toxicityAQ * PERCENT_DECIMAL) / PERCENT_DECIMAL;
+        toxicityAQ = Math.round(toxicityAQ * PERCENT) / PERCENT;
+        if (toxicityAQ < 0) {
+            toxicityAQ = 0;
+        }
     }
 
     /**
@@ -63,4 +69,9 @@ public abstract class Air extends Entity {
      */
     public void changeWeather(final boolean condition) { }
 
+    public void addOxygen(final double oxygen) {
+        this.oxygenLevel += oxygen;
+        setAirQuality();
+        calculateToxicityAQ();
+    }
 }

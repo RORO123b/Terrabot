@@ -32,6 +32,13 @@ public class MountainAir extends Air {
                 * ALTITUDE_FACTOR);
         airQuality = (oxygenFactor * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
                 - (numberOfHikers * HIKER_FACTOR);
+        if (airQuality > PERCENT) {
+            airQuality = PERCENT;
+        }
+
+        if (airQuality < 0) {
+            airQuality = 0;
+        }
     }
 
     /**

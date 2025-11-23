@@ -118,6 +118,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
+                        map.updateEntities(robot);
                         Cell currentCell = map.getCell(robot.getX(), robot.getY());
                         ObjectNode envOutput = MAPPER.createObjectNode();
 
@@ -160,6 +161,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
+                        map.updateEntities(robot);
                         ArrayNode mapOutput = MAPPER.createArrayNode();
 
                         for (int y = 0; y < map.getHeight(); y++) {
@@ -207,6 +209,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
+                        map.updateEntities(robot);
                         String moveResult = robot.moveRobot(map);
                         commandNode.put("message", moveResult);
                     } else if (robot != null && robot.getIsCharging()) {
@@ -230,6 +233,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
+                        map.updateEntities(robot);
                         robot.rechargeBattery(command.getTimeToCharge(), command.getTimestamp());
                         commandNode.put("message", "Robot battery is charging.");
                     } else if (robot != null && robot.getIsCharging()) {
@@ -253,6 +257,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
+                        map.updateEntities(robot);
                         commandNode.put("message",
                                 "TerraBot has " + robot.getEnergyPoints() + " energy points left.");
                     } else if (robot != null && robot.getIsCharging()) {
@@ -268,6 +273,7 @@ public final class Main {
                 case "changeWeatherConditions":
                     if (simulationActive && map != null) {
                         map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot);
                         String type = command.getType();
                         double value = 0;
                         String season = null;
@@ -308,6 +314,29 @@ public final class Main {
                     }
                     commandNode.put("timestamp", command.getTimestamp());
                     break;
+
+                case "scanObject":
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                    }
+                    String color = command.getColor();
+                    String smell = command.getSmell();
+                    String sound = command.getSound();
+
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
+                        String scanResult = robot.scanObject(color, smell, sound, map);
+                        commandNode.put("message", scanResult);
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
                 default:
                     commandNode.put("timestamp", command.getTimestamp());
                     break;
@@ -522,6 +551,7 @@ public final class Main {
         if (plant != null) {
             plant.setType(input.getType());
             plant.setMass(input.getMass());
+            plant.setMaturityOxygenRate("Young");
         }
 
         return plant;

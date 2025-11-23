@@ -29,6 +29,13 @@ public class PolarAir extends Air {
     public void setAirQuality() {
         this.airQuality = (oxygenLevel * OXYGEN_FACTOR) + (TEMP_FACTOR - Math.abs(temperature))
                 - (iceCrystalConcentration * ICE_FACTOR);
+        if (airQuality > PERCENT) {
+            airQuality = PERCENT;
+        }
+
+        if (airQuality < 0) {
+            airQuality = 0;
+        }
     }
 
     /**

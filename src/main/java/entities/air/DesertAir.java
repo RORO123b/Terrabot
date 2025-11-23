@@ -30,6 +30,13 @@ public class DesertAir extends Air {
     public void setAirQuality() {
         this.airQuality = (oxygenLevel * OXYGEN_FACTOR) - (dustParticles * DUST_FACTOR)
                 - (temperature * TEMP_FACTOR) - (desertStorm ? STORM_PENALTY : 0);
+        if (airQuality > PERCENT) {
+            airQuality = PERCENT;
+        }
+
+        if (airQuality < 0) {
+            airQuality = 0;
+        }
     }
 
     /**

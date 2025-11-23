@@ -30,6 +30,13 @@ public class TemperateAir extends Air {
     public void setAirQuality() {
         this.airQuality = (oxygenLevel * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
                 - (pollenLevel * POLLEN_FACTOR) - (season.equalsIgnoreCase("Spring") ? SPRING_PENALTY : 0);
+        if (airQuality > PERCENT) {
+            airQuality = PERCENT;
+        }
+
+        if (airQuality < 0) {
+            airQuality = 0;
+        }
     }
 
     /**

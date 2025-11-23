@@ -10,41 +10,78 @@ import lombok.Setter;
 public abstract class Plant extends Entity {
     protected static final double YOUNG_RATE = 0.2;
     protected static final double MATURE_RATE = 0.7;
-    protected static final double OXYGEN_RATE = 0.4;
+    protected static final double OLD_RATE = 0.4;
     protected static final double POSSIBILITY_DIVISOR = 100.0;
 
-    protected String type;
     protected double maturityOxygenRate;
     protected double oxygenLevel;
-    protected double oxygenFromPlant;
     protected double plantPossibility;
+    protected boolean isGrowing;
+    protected double growthRate;
+    protected double growthCapacity;
 
     /**
      * Sets the maturity oxygen rate based on plant status.
-     * @param status The status of the plant (Young, Mature, or Oxygen)
+     * @param status The status of the plant (Young, Mature, or Old)
      */
     public void setMaturityOxygenRate(final String status) {
         if (status.equals("Young")) {
             this.maturityOxygenRate = YOUNG_RATE;
         } else if (status.equals("Mature")) {
             this.maturityOxygenRate = MATURE_RATE;
-        } else if (status.equals("Oxygen")) {
-            this.maturityOxygenRate = OXYGEN_RATE;
+        } else if (status.equals("Old")) {
+            this.maturityOxygenRate = OLD_RATE;
         }
     }
 
+
+    public void setOxygenLevel() {}
     /**
      * Calculates the oxygen level for the plant.
      */
     public void calculateOxygenLevel() {
-        this.oxygenLevel = this.oxygenLevel + this.maturityOxygenRate + this.oxygenFromPlant;
+        setOxygenLevel();
+        this.oxygenLevel = this.oxygenLevel + this.maturityOxygenRate;
     }
 
+    public double getOxygenLevel() {
+        return oxygenLevel;
+    }
     /**
      * Gets the possibility to get stuck in plants.
      * @return The possibility as a decimal value
      */
     public double getPossibilityToGetStuckInPlants() {
         return plantPossibility / POSSIBILITY_DIVISOR;
+    }
+
+    public void calculateGrowth() {
+        if (isGrowing) {
+            this.growthCapacity += growthRate;
+            if(growthCapacity > 1.0) {
+                growthCapacity -= 1.0;
+                nextMaturity();
+            }
+            calculateOxygenLevel();
+        }
+    }
+
+    /**
+     * Checks if the plant has exceeded its lifetime (gone past Old stage).
+     * @return true if the plant should be destroyed, false otherwise
+     */
+    public boolean shouldBeDestroyed() {
+        return maturityOxygenRate == OLD_RATE;
+    }
+
+    /**
+     * Advances the plant to the next maturity stage.
+     */
+    public void nextMaturity() {
+        if (maturityOxygenRate == YOUNG_RATE) {
+            maturityOxygenRate = MATURE_RATE;
+        } else if (maturityOxygenRate == MATURE_RATE) {
+            maturityOxygenRate = OLD_RATE;
+        }
     }
 }

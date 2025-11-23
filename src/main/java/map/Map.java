@@ -130,4 +130,24 @@ public final class Map {
             }
         }
     }
+
+    public void updateEntities(Robot robot) {
+        if (robot.getEnergyPoints() <= 0) {
+            return;
+        }
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Cell cell = cells[i][j];
+                if (cell.getPlant() != null && cell.getPlant().isGrowing()) {
+                    cell.getPlant().calculateGrowth();
+                    cell.getAir().addOxygen(cell.getPlant().getOxygenLevel());
+                    if (cell.getPlant().shouldBeDestroyed()
+                            && cell.getPlant().getGrowthCapacity() >= 1.0) {
+                        cell.setPlant(null);
+                    }
+                }
+            }
+        }
+    }
 }

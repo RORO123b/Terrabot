@@ -30,6 +30,13 @@ public class TropicalAir extends Air {
     public void setAirQuality() {
         this.airQuality = (oxygenLevel * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
                 - (co2Level * CO2_FACTOR) + (rainfall * RAINFALL_FACTOR);
+        if (airQuality > PERCENT) {
+            airQuality = PERCENT;
+        }
+
+        if (airQuality < 0) {
+            airQuality = 0;
+        }
     }
     /**
      * Changes weather by setting rainfall.
