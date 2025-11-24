@@ -131,7 +131,11 @@ public final class Map {
         }
     }
 
-    public void updateEntities(Robot robot) {
+    /**
+     * Updates all growing plants in the map.
+     * @param robot The robot to check energy
+     */
+    public void updateEntities(final Robot robot) {
         if (robot.getEnergyPoints() <= 0) {
             return;
         }

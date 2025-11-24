@@ -12,6 +12,9 @@ public class FloweringPlants extends Plant {
         calculateOxygenLevel();
     }
 
+    /**
+     * Sets the oxygen level for flowering plants.
+     */
     @Override
     public void setOxygenLevel() {
         this.oxygenLevel = OXYGEN;

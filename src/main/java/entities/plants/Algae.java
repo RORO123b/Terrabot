@@ -12,6 +12,9 @@ public class Algae extends Plant {
         calculateOxygenLevel();
     }
 
+    /**
+     * Sets the oxygen level for algae.
+     */
     @Override
     public void setOxygenLevel() {
         this.oxygenLevel = OXYGEN;

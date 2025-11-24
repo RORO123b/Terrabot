@@ -12,6 +12,9 @@ public class Mosses extends Plant {
         calculateOxygenLevel();
     }
 
+    /**
+     * Sets the oxygen level for mosses.
+     */
     @Override
     public void setOxygenLevel() {
         this.oxygenLevel = OXYGEN;

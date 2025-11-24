@@ -11,6 +11,9 @@ public class GymnospermsPlants extends Plant {
         calculateOxygenLevel();
     }
 
+    /**
+     * Sets the oxygen level for gymnosperms plants.
+     */
     @Override
     public void setOxygenLevel() {
         this.oxygenLevel = 0;

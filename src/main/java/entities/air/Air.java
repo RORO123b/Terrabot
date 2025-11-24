@@ -35,8 +35,11 @@ public abstract class Air extends Entity {
         return Math.round(airQuality * PERCENT) / PERCENT;
     }
 
-
-    public double getOxygenLevel() {
+    /**
+     * Gets the rounded oxygen level value.
+     * @return The rounded oxygen level
+     */
+    public final double getOxygenLevel() {
         return Math.round(oxygenLevel * PERCENT) / PERCENT;
     }
 
@@ -69,7 +72,11 @@ public abstract class Air extends Entity {
      */
     public void changeWeather(final boolean condition) { }
 
-    public void addOxygen(final double oxygen) {
+    /**
+     * Adds oxygen to the air and recalculates air quality.
+     * @param oxygen The amount of oxygen to add
+     */
+    public final void addOxygen(final double oxygen) {
         this.oxygenLevel += oxygen;
         setAirQuality();
         calculateToxicityAQ();

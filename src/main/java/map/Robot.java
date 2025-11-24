@@ -10,6 +10,8 @@ import lombok.Setter;
 public class Robot {
     private static final int DIRECTIONS = 4;
     private static final int SCAN_ENERGY_COST = 7;
+    private static final double WATER_GROWTH_RATE = 0.2;
+    private static final double SOIL_GROWTH_RATE = 0.2;
 
     private int x;
     private int y;
@@ -47,7 +49,7 @@ public class Robot {
                         map.getCell(tempX, tempY).getSoil().possibilityToGetStuckInSoil();
 
                         double possibilityToGetDamagedByAir = 0;
-                
+
                 possibilityToGetDamagedByAir =
                         map.getCell(tempX, tempY).getAir().getToxicityAQ();
 
@@ -117,7 +119,16 @@ public class Robot {
         }
     }
 
-    public String scanObject(String color, String smell, String sound, Map map) {
+    /**
+     * Scans an object at the robot's current position.
+     * @param color The color attribute of the object
+     * @param smell The smell attribute of the object
+     * @param sound The sound attribute of the object
+     * @param map The map containing the cells
+     * @return A message describing the scanned object
+     */
+    public final String scanObject(final String color, final String smell,
+                                     final String sound, final Map map) {
         String result;
         if (energyPoints - SCAN_ENERGY_COST < 0) {
             return "ERROR: Not enough battery left. Cannot perform action";
@@ -132,10 +143,10 @@ public class Robot {
             scannedPlant.setGrowing(true);
             double growthRate = 0;
             if (map.getCell(x, y).getWater() != null) {
-                growthRate += 0.2;
+                growthRate += WATER_GROWTH_RATE;
             }
             if (map.getCell(x, y).getSoil() != null) {
-                growthRate += 0.2;
+                growthRate += SOIL_GROWTH_RATE;
             }
             scannedPlant.setGrowthRate(growthRate);
             scannedPlant.calculateGrowth();

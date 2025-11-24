@@ -11,6 +11,9 @@ public class Ferns extends Plant {
         calculateOxygenLevel();
     }
 
+    /**
+     * Sets the oxygen level for ferns.
+     */
     @Override
     public void setOxygenLevel() {
         this.oxygenLevel = 0;

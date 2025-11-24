@@ -34,8 +34,11 @@ public abstract class Plant extends Entity {
         }
     }
 
+    /**
+     * Sets the oxygen level for this plant type.
+     */
+    public void setOxygenLevel() { }
 
-    public void setOxygenLevel() {}
     /**
      * Calculates the oxygen level for the plant.
      */
@@ -44,7 +47,11 @@ public abstract class Plant extends Entity {
         this.oxygenLevel = this.oxygenLevel + this.maturityOxygenRate;
     }
 
-    public double getOxygenLevel() {
+    /**
+     * Gets the oxygen level of the plant.
+     * @return The oxygen level
+     */
+    public final double getOxygenLevel() {
         return oxygenLevel;
     }
     /**
@@ -55,10 +62,13 @@ public abstract class Plant extends Entity {
         return plantPossibility / POSSIBILITY_DIVISOR;
     }
 
-    public void calculateGrowth() {
+    /**
+     * Calculates the growth of the plant if it is growing.
+     */
+    public final void calculateGrowth() {
         if (isGrowing) {
             this.growthCapacity += growthRate;
-            if(growthCapacity > 1.0) {
+            if (growthCapacity > 1.0) {
                 growthCapacity -= 1.0;
                 nextMaturity();
             }
