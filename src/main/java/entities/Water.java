@@ -32,6 +32,8 @@ public final class Water extends Entity {
     private double contaminantIndex;
     private boolean isFrozen;
     private double waterQuality;
+    private boolean isScanned;
+    private int nextUpdate;
 
     /**
      * Calculates the normalized water quality based on formula

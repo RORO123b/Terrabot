@@ -79,6 +79,7 @@ public final class Main {
         Robot robot = null;
         boolean simulationActive = false;
         int currentSimulationIndex = -1;
+        int lastTimestamp = 0;
 
         for (CommandInput command : inputLoader.getCommands()) {
             ObjectNode commandNode = MAPPER.createObjectNode();
@@ -105,6 +106,7 @@ public final class Main {
                         commandNode.put("message", "Simulation has started.");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
                     break;
 
                 case "printEnvConditions":
@@ -118,7 +120,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot);
+                        map.updateEntities(robot, command, lastTimestamp);
                         Cell currentCell = map.getCell(robot.getX(), robot.getY());
                         ObjectNode envOutput = MAPPER.createObjectNode();
 
@@ -148,6 +150,7 @@ public final class Main {
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
                     break;
 
                 case "printMap":
@@ -161,7 +164,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot);
+                        map.updateEntities(robot, command, lastTimestamp);
                         ArrayNode mapOutput = MAPPER.createArrayNode();
 
                         for (int y = 0; y < map.getHeight(); y++) {
@@ -190,12 +193,14 @@ public final class Main {
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
                     break;
 
                 case "endSimulation":
                     simulationActive = false;
                     commandNode.put("message", "Simulation has ended.");
                     commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
                     break;
 
                 case "moveRobot":
@@ -209,7 +214,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot);
+                        map.updateEntities(robot, command, lastTimestamp);
                         String moveResult = robot.moveRobot(map);
                         commandNode.put("message", moveResult);
                     } else if (robot != null && robot.getIsCharging()) {
@@ -220,6 +225,7 @@ public final class Main {
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
                     break;
 
                 case "rechargeBattery":
@@ -233,7 +239,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot);
+                        map.updateEntities(robot, command, lastTimestamp);
                         robot.rechargeBattery(command.getTimeToCharge(), command.getTimestamp());
                         commandNode.put("message", "Robot battery is charging.");
                     } else if (robot != null && robot.getIsCharging()) {
@@ -244,7 +250,8 @@ public final class Main {
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
-                break;
+                    lastTimestamp = command.getTimestamp();
+                    break;
 
                 case "getEnergyStatus":
                     if (robot != null) {
@@ -257,7 +264,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot);
+                        map.updateEntities(robot, command, lastTimestamp);
                         commandNode.put("message",
                                 "TerraBot has " + robot.getEnergyPoints() + " energy points left.");
                     } else if (robot != null && robot.getIsCharging()) {
@@ -268,12 +275,13 @@ public final class Main {
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
                     break;
 
                 case "changeWeatherConditions":
                     if (simulationActive && map != null) {
                         map.checkWeatherFinished(command.getTimestamp());
-                        map.updateEntities(robot);
+                        map.updateEntities(robot, command, lastTimestamp);
                         String type = command.getType();
                         double value = 0;
                         String season = null;
@@ -313,6 +321,7 @@ public final class Main {
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
                     commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
                     break;
 
                 case "scanObject":
@@ -321,6 +330,7 @@ public final class Main {
                     }
                     if (simulationActive && map != null) {
                         map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot, command, lastTimestamp);
                     }
                     String color = command.getColor();
                     String smell = command.getSmell();
@@ -328,7 +338,7 @@ public final class Main {
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        String scanResult = robot.scanObject(color, smell, sound, map);
+                        String scanResult = robot.scanObject(color, smell, sound, map, command);
                         commandNode.put("message", scanResult);
                     } else if (robot != null && robot.getIsCharging()) {
                         commandNode.put("message",
@@ -337,6 +347,9 @@ public final class Main {
                         commandNode.put("message",
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
+                    commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
+                    break;
                 default:
                     commandNode.put("timestamp", command.getTimestamp());
                     break;

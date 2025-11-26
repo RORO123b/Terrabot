@@ -49,9 +49,7 @@ public abstract class Air extends Entity {
     public void calculateToxicityAQ() {
         toxicityAQ = PERCENT * (1 - airQuality / getMaxScore());
         toxicityAQ = Math.round(toxicityAQ * PERCENT) / PERCENT;
-        if (toxicityAQ < 0) {
-            toxicityAQ = 0;
-        }
+        toxicityAQ = Math.max(0, Math.min(100, toxicityAQ));
     }
 
     /**
@@ -77,8 +75,22 @@ public abstract class Air extends Entity {
      * @param oxygen The amount of oxygen to add
      */
     public final void addOxygen(final double oxygen) {
-        this.oxygenLevel += oxygen;
+        oxygenLevel += oxygen;
         setAirQuality();
         calculateToxicityAQ();
+    }
+
+    public final void addHumidity(final double humidity) {
+        this.humidity += humidity;
+        setAirQuality();
+        calculateToxicityAQ();
+    }
+
+    public double getHumidity() {
+        return Math.round(humidity * PERCENT) / PERCENT;
+    }
+
+    public boolean isToxic() {
+        return toxicityAQ > 0.8 * getMaxScore();
     }
 }

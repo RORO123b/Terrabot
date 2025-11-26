@@ -28,15 +28,9 @@ public class TemperateAir extends Air {
      * Sets the air quality for temperate air.
      */
     public void setAirQuality() {
-        this.airQuality = (oxygenLevel * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
+        airQuality = (oxygenLevel * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
                 - (pollenLevel * POLLEN_FACTOR) - (season.equalsIgnoreCase("Spring") ? SPRING_PENALTY : 0);
-        if (airQuality > PERCENT) {
-            airQuality = PERCENT;
-        }
-
-        if (airQuality < 0) {
-            airQuality = 0;
-        }
+        airQuality = Math.max(0, Math.min(100, airQuality));
     }
 
     /**

@@ -1,6 +1,11 @@
 package map;
-import entities.plants.Plant;
+import java.util.ArrayList;
+import java.util.List;
 
+import entities.Water;
+import entities.animals.Animal;
+import entities.plants.Plant;
+import fileio.CommandInput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -101,7 +106,7 @@ public class Robot {
     public final void rechargeBattery(final int timeToCharge, final int currentTime) {
         isCharging = true;
         timestampReady = currentTime + timeToCharge;
-        this.energyPoints += timeToCharge;
+        energyPoints += timeToCharge;
     }
 
     public final boolean getIsCharging() {
@@ -125,23 +130,28 @@ public class Robot {
      * @param smell The smell attribute of the object
      * @param sound The sound attribute of the object
      * @param map The map containing the cells
+     * @param command The command input with the timestamp
      * @return A message describing the scanned object
      */
     public final String scanObject(final String color, final String smell,
-                                     final String sound, final Map map) {
+                                     final String sound, final Map map, final CommandInput command) {
         String result;
+
         if (energyPoints - SCAN_ENERGY_COST < 0) {
             return "ERROR: Not enough battery left. Cannot perform action";
         }
-        energyPoints -= SCAN_ENERGY_COST;
+
         if (!color.equals("none") && !smell.equals("none") && sound.equals("none")) {
             result = "The scanned object is a plant.";
             if (map.getCell(x, y).getPlant() == null) {
                 return "ERROR: Object not found. Cannot perform action";
             }
+            energyPoints -= SCAN_ENERGY_COST;
+
             Plant scannedPlant = map.getCell(x, y).getPlant();
             scannedPlant.setGrowing(true);
             double growthRate = 0;
+
             if (map.getCell(x, y).getWater() != null) {
                 growthRate += WATER_GROWTH_RATE;
             }
@@ -150,21 +160,33 @@ public class Robot {
             }
             scannedPlant.setGrowthRate(growthRate);
             scannedPlant.calculateGrowth();
-            // Destroy plant if it has exceeded Old stage
             if (scannedPlant.shouldBeDestroyed()
                     && scannedPlant.getGrowthCapacity() >= 1.0) {
                 map.getCell(x, y).setPlant(null);
             }
+            map.addScannedPlant(scannedPlant);
         } else if (!color.equals("none") && !smell.equals("none") && !sound.equals("none")) {
             result = "The scanned object is an animal.";
             if (map.getCell(x, y).getAnimal() == null) {
                 return "ERROR: Object not found. Cannot perform action";
             }
+            energyPoints -= SCAN_ENERGY_COST;
+            Animal scannedAnimal = map.getCell(x, y).getAnimal();
+
+            scannedAnimal.setScanned(true);
+            scannedAnimal.setNextUpdate(command.getTimestamp() + 2);
+            map.addScannedAnimal(scannedAnimal);
         } else {
             result = "The scanned object is water.";
             if (map.getCell(x, y).getWater() == null) {
                 return "ERROR: Object not found. Cannot perform action";
             }
+            energyPoints -= SCAN_ENERGY_COST;
+            Water scannedWater = map.getCell(x, y).getWater();
+
+            scannedWater.setScanned(true);
+            scannedWater.setNextUpdate(command.getTimestamp() + 2);
+            map.addScannedWater(scannedWater);
         }
         return result;
     }

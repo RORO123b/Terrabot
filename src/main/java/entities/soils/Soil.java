@@ -36,4 +36,13 @@ public abstract class Soil extends Entity {
      * @return The possibility to get stuck
      */
     public abstract double possibilityToGetStuckInSoil();
+
+    public final void addWaterRetention(final double water) {
+        this.waterRetention += water;
+        calculateFinalResult();
+    }
+
+    public double getWaterRetention() {
+        return Math.round(waterRetention * PERCENT) / PERCENT;
+    }
 }
