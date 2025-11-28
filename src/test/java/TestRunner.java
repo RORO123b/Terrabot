@@ -82,7 +82,6 @@ public class TestRunner {
     ) throws IOException {
         Main.action(inputPath, outputPath);
 
-        JsonNode inputJson = objectMapper.readTree(new File(inputPath));
         JsonNode outputJson = objectMapper.readTree(new File(outputPath));
         JsonNode refJson = objectMapper.readTree(new File(refPath));
 
@@ -128,7 +127,7 @@ public class TestRunner {
             assertThat(errorCount).isLessThanOrEqualTo(CheckerConstants.MAXIMUM_ERROR_CHECKSTYLE);
             devmindResults.add(new DevmindResult(
                     "checkstyle",
-                    "",
+                    PASSED,
                     CheckerConstants.CHECKSTYLE_POINTS
             ));
             System.out.println(checkStyleErrors);
@@ -172,7 +171,7 @@ public class TestRunner {
 
             devmindResults.add(new DevmindResult(
                     "git",
-                    "",
+                    PASSED,
                     CheckerConstants.GIT_POINTS
             ));
             TestCaseWatcher.totalPoints += CheckerConstants.GIT_POINTS;
