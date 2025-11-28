@@ -15,11 +15,11 @@ public class SwampSoil extends Soil {
     private double waterLogging;
 
     /**
-     * Calculates the quality score for swamp soil
-     * @return The quality score
+     * Calculates the raw quality score for swamp soil
+     * @return The raw quality score
      */
     @Override
-    public double calculateQuality() {
+    protected double calculateRawQuality() {
         return (nitrogen * NITROGEN_FACTOR) + (organicMatter * ORGANIC_FACTOR)
                 - (waterLogging * WATERLOGGING_FACTOR);
     }

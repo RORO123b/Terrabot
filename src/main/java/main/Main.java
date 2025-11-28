@@ -52,6 +52,7 @@ import map.Robot;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * The entry point to this homework. It runs the checker that tests your implementation.
@@ -87,6 +88,13 @@ public final class Main {
 
             switch (command.getCommand()) {
                 case "startSimulation":
+                    if (simulationActive) {
+                        commandNode.put("message",
+                                "ERROR: Simulation already started. Cannot perform action");
+                        commandNode.put("timestamp", command.getTimestamp());
+                        lastTimestamp = command.getTimestamp();
+                        break;
+                    }
                     currentSimulationIndex++;
                     if (currentSimulationIndex < inputLoader.getSimulations().size()) {
                         SimulationInput sim = inputLoader
@@ -197,8 +205,13 @@ public final class Main {
                     break;
 
                 case "endSimulation":
-                    simulationActive = false;
-                    commandNode.put("message", "Simulation has ended.");
+                    if (simulationActive) {
+                        simulationActive = false;
+                        commandNode.put("message", "Simulation has ended.");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
                     commandNode.put("timestamp", command.getTimestamp());
                     lastTimestamp = command.getTimestamp();
                     break;
@@ -315,7 +328,12 @@ public final class Main {
                             default:
                                 break;
                         }
-                        commandNode.put("message", "The weather has changed.");
+                        if (map.hasTypeOfWeather(airType)) {
+                            commandNode.put("message", "The weather has changed.");
+                        } else {
+                            commandNode.put("message",
+                                    "ERROR: The weather change does not affect the environment. Cannot perform action");
+                        }
                     } else {
                         commandNode.put("message",
                                 "ERROR: Simulation not started. Cannot perform action");
@@ -340,6 +358,93 @@ public final class Main {
                             && !robot.getIsCharging()) {
                         String scanResult = robot.scanObject(color, smell, sound, map, command);
                         commandNode.put("message", scanResult);
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
+                    commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
+                    break;
+                case "learnFact":
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                    }
+                    String subject = command.getSubject();
+                    String component = command.getComponents();
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
+                        String learnResult = robot.learnFact(subject, component, map);
+                        commandNode.put("message", learnResult);
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
+                    map.updateEntities(robot, command, lastTimestamp);
+                    commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
+                    break;
+
+                case "printKnowledgeBase":
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot, command, lastTimestamp);
+                    }
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
+                        ArrayNode knowledgeOutput = MAPPER.createArrayNode();
+                        for (java.util.Map.Entry<String, List<String>> entry
+                                : robot.getKnowledgeBase().entrySet()) {
+                            ObjectNode topicNode = MAPPER.createObjectNode();
+                            topicNode.put("topic", entry.getKey());
+
+                            ArrayNode factsArray = MAPPER.createArrayNode();
+                            for (String fact : entry.getValue()) {
+                                factsArray.add(fact);
+                            }
+                            topicNode.set("facts", factsArray);
+
+                            knowledgeOutput.add(topicNode);
+                        }
+                        commandNode.set("output", knowledgeOutput);
+                    } else if (robot != null && robot.getIsCharging()) {
+                        commandNode.put("message",
+                                "ERROR: Robot still charging. Cannot perform action");
+                    } else {
+                        commandNode.put("message",
+                                "ERROR: Simulation not started. Cannot perform action");
+                    }
+                    commandNode.put("timestamp", command.getTimestamp());
+                    lastTimestamp = command.getTimestamp();
+                    break;
+
+                case "improveEnvironment":
+                    if (robot != null) {
+                        robot.checkBatteryCharging(command.getTimestamp());
+                    }
+                    if (simulationActive && map != null) {
+                        map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot, command, lastTimestamp);
+                    }
+                    String improvementType = command.getImprovementType();
+                    String type = command.getType();
+                    String name = command.getName();
+
+                    if (simulationActive && map != null && robot != null
+                            && !robot.getIsCharging()) {
+                        String result = robot.improveEnvironment(improvementType, type, name, map);
+                        commandNode.put("message", result);
                     } else if (robot != null && robot.getIsCharging()) {
                         commandNode.put("message",
                                 "ERROR: Robot still charging. Cannot perform action");
@@ -492,7 +597,7 @@ public final class Main {
             soil.setWaterRetention(input.getWaterRetention());
             soil.setSoilpH(input.getSoilpH());
             soil.setOrganicMatter(input.getOrganicMatter());
-            soil.calculateFinalResult();
+            soil.calculateQuality();
         }
 
         return soil;
@@ -621,7 +726,7 @@ public final class Main {
         node.put("waterRetention", soil.getWaterRetention());
         node.put("soilpH", soil.getSoilpH());
         node.put("organicMatter", soil.getOrganicMatter());
-        node.put("soilQuality", soil.getFinalResult());
+        node.put("soilQuality", soil.calculateQuality());
 
         switch (soil.getType()) {
             case "ForestSoil":

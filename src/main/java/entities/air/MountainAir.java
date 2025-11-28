@@ -32,7 +32,7 @@ public class MountainAir extends Air {
                 * ALTITUDE_FACTOR);
         airQuality = (oxygenFactor * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
                 - (numberOfHikers * HIKER_FACTOR);
-        airQuality = Math.max(0, Math.min(100, airQuality));
+        airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
     }
 
     /**

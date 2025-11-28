@@ -16,11 +16,11 @@ public class DesertSoil extends Soil {
     private double salinity;
 
     /**
-     * Calculates the quality score for desert soil.
-     * @return The quality score
+     * Calculates the raw quality score for desert soil.
+     * @return The raw quality score
      */
     @Override
-    public double calculateQuality() {
+    protected double calculateRawQuality() {
         return (nitrogen * NITROGEN_FACTOR) + (waterRetention * WATER_FACTOR)
                 - (salinity * SALINITY_FACTOR);
     }

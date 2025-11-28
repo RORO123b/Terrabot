@@ -16,11 +16,11 @@ public class TundraSoil extends Soil {
     private double permafrostDepth;
 
     /**
-     * Calculates the quality score for tundra soil
-     * @return The quality score
+     * Calculates the raw quality score for tundra soil
+     * @return The raw quality score
      */
     @Override
-    public double calculateQuality() {
+    protected double calculateRawQuality() {
         return (nitrogen * NITROGEN_FACTOR) + (organicMatter * ORGANIC_FACTOR)
                 - (permafrostDepth * PERMAFROST_FACTOR);
     }

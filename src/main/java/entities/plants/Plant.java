@@ -16,7 +16,7 @@ public abstract class Plant extends Entity {
     protected double maturityOxygenRate;
     protected double oxygenLevel;
     protected double plantPossibility;
-    protected boolean isGrowing;
+    protected boolean isScanned;
     protected double growthRate;
     protected double growthCapacity;
 
@@ -66,8 +66,8 @@ public abstract class Plant extends Entity {
      * Calculates the growth of the plant if it is growing.
      */
     public final void calculateGrowth() {
-        if (isGrowing) {
-            this.growthCapacity += growthRate;
+        if (isScanned) {
+            growthCapacity += growthRate;
             if (growthCapacity > 1.0) {
                 growthCapacity -= 1.0;
                 nextMaturity();

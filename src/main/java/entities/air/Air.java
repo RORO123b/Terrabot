@@ -9,6 +9,8 @@ import lombok.Setter;
 
 public abstract class Air extends Entity {
     protected static final double PERCENT = 100;
+    protected static final double MAX_QUALITY = 100;
+    protected static final double TOXIC_THRESHOLD = 0.8;
 
     protected double humidity;
     protected double temperature;
@@ -47,9 +49,11 @@ public abstract class Air extends Entity {
      * Calculates the toxicity air quality
      */
     public void calculateToxicityAQ() {
-        toxicityAQ = PERCENT * (1 - airQuality / getMaxScore());
+        double normalizedAirQuality = Math.round(airQuality * PERCENT) / PERCENT;
+        normalizedAirQuality = Math.max(0, Math.min(MAX_QUALITY, normalizedAirQuality));
+        toxicityAQ = PERCENT * (1 - normalizedAirQuality / getMaxScore());
         toxicityAQ = Math.round(toxicityAQ * PERCENT) / PERCENT;
-        toxicityAQ = Math.max(0, Math.min(100, toxicityAQ));
+        toxicityAQ = Math.max(0, Math.min(MAX_QUALITY, toxicityAQ));
     }
 
     /**
@@ -80,17 +84,29 @@ public abstract class Air extends Entity {
         calculateToxicityAQ();
     }
 
-    public final void addHumidity(final double humidity) {
-        this.humidity += humidity;
+    /**
+     * Adds humidity to the air.
+     * @param humidityToAdd The amount of humidity to add
+     */
+    public void addHumidity(final double humidityToAdd) {
+        humidity += humidityToAdd;
         setAirQuality();
         calculateToxicityAQ();
     }
 
-    public double getHumidity() {
+    /**
+     * Gets the humidity level.
+     * @return The humidity value
+     */
+    public final double getHumidity() {
         return Math.round(humidity * PERCENT) / PERCENT;
     }
 
-    public boolean isToxic() {
-        return toxicityAQ > 0.8 * getMaxScore();
+    /**
+     * Checks if the air is toxic.
+     * @return true if toxic, false otherwise
+     */
+    public final boolean isToxic() {
+        return toxicityAQ > TOXIC_THRESHOLD * getMaxScore();
     }
 }

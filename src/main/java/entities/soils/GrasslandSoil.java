@@ -18,11 +18,11 @@ public class GrasslandSoil extends Soil {
     private double rootDensity;
 
     /**
-     * Calculates the quality score for grassland soil
-     * @return The quality score
+     * Calculates the raw quality score for grassland soil
+     * @return The raw quality score
      */
     @Override
-    public double calculateQuality() {
+    protected double calculateRawQuality() {
         return (nitrogen * NITROGEN_FACTOR) + (organicMatter * ORGANIC_FACTOR)
                 + (rootDensity * ROOT_FACTOR);
     }

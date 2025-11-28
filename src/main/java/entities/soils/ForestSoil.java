@@ -19,11 +19,11 @@ public class ForestSoil extends Soil {
     private double leafLitter;
 
     /**
-     * Calculates the quality score for forest soil
-     * @return The quality score
+     * Calculates the raw quality score for forest soil
+     * @return The raw quality score
      */
     @Override
-    public double calculateQuality() {
+    protected double calculateRawQuality() {
         return (nitrogen * NITROGEN_FACTOR) + (organicMatter * ORGANIC_FACTOR)
                 + (waterRetention * WATER_FACTOR) + (leafLitter * LITTER_FACTOR);
     }

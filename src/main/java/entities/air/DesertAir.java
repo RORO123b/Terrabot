@@ -30,7 +30,7 @@ public class DesertAir extends Air {
     public void setAirQuality() {
         airQuality = (oxygenLevel * OXYGEN_FACTOR) - (dustParticles * DUST_FACTOR)
                 - (temperature * TEMP_FACTOR) - (desertStorm ? STORM_PENALTY : 0);
-        airQuality = Math.max(0, Math.min(100, airQuality));
+        airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
     }
 
     /**

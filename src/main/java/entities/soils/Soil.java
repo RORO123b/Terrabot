@@ -15,20 +15,20 @@ public abstract class Soil extends Entity {
     protected double waterRetention;
     protected double soilpH;
     protected double organicMatter;
-    private double finalResult;
 
     /**
-     * Calculates the quality score for the soil
-     * @return The quality score
+     * Calculates the raw quality score for the soil (to be overridden by subclasses)
+     * @return The raw quality score
      */
-    public abstract double calculateQuality();
+    protected abstract double calculateRawQuality();
 
     /**
-     * Calculates and normalizes the final result
+     * Calculates and returns the normalized soil quality
+     * @return The normalized quality score
      */
-    public void calculateFinalResult() {
-        double normalizeScore = Math.clamp(calculateQuality(), 0, MAX_SCORE);
-        finalResult = Math.round(normalizeScore * PERCENT) / PERCENT;
+    public double calculateQuality() {
+        double normalizeScore = Math.clamp(calculateRawQuality(), 0, MAX_SCORE);
+        return Math.round(normalizeScore * PERCENT) / PERCENT;
     }
 
     /**
@@ -37,12 +37,20 @@ public abstract class Soil extends Entity {
      */
     public abstract double possibilityToGetStuckInSoil();
 
+    /**
+     * Adds water retention to the soil.
+     * @param water The amount of water retention to add
+     */
     public final void addWaterRetention(final double water) {
-        this.waterRetention += water;
-        calculateFinalResult();
+        waterRetention += water;
+        calculateQuality();
     }
 
-    public double getWaterRetention() {
+    /**
+     * Gets the water retention value.
+     * @return The water retention rounded to 2 decimals
+     */
+    public final double getWaterRetention() {
         return Math.round(waterRetention * PERCENT) / PERCENT;
     }
 }

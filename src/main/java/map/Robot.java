@@ -1,5 +1,7 @@
 package map;
+
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import entities.Water;
@@ -15,14 +17,23 @@ import lombok.Setter;
 public class Robot {
     private static final int DIRECTIONS = 4;
     private static final int SCAN_ENERGY_COST = 7;
+    private static final int LEARN_ENERGY_COST = 2;
     private static final double WATER_GROWTH_RATE = 0.2;
     private static final double SOIL_GROWTH_RATE = 0.2;
+    private static final double ORGANIC_MATTER = 0.3;
+    private static final double WATER_RETENTION_INCREMENT = 0.2;
+    private static final int IMPROVE_ENERGY_COST = 10;
 
     private int x;
     private int y;
     private int energyPoints;
     private boolean isCharging = false;
     private int timestampReady = -1;
+
+    private List<Plant> scannedPlants = new ArrayList<>();
+    private List<Water> scannedWaters = new ArrayList<>();
+    private List<Animal> scannedAnimals = new ArrayList<>();
+    private LinkedHashMap<String, List<String>> knowledgeBase = new LinkedHashMap<>();
 
     public Robot(final int energyPoints) {
         x = 0;
@@ -42,6 +53,7 @@ public class Robot {
         int bestX = x;
         int bestY = y;
 
+        System.out.println("THE ROBOT HAS " + energyPoints);
         for (int k = 0; k < DIRECTIONS; k++) {
             int total = 2;
             int tempX = x + dx[k];
@@ -80,6 +92,7 @@ public class Robot {
                         + possibilityToBeAttackedByAnimal + possibilityToGetStuckInPlants;
                 double mean = Math.abs(sum / total);
                 int result = (int) Math.round(mean);
+                System.out.println("RESULT for (" + tempX + ", " + tempY + ") is " + result);
 
                 if (result < minn && energyPoints >= result) {
                     minn = result;
@@ -134,13 +147,13 @@ public class Robot {
      * @return A message describing the scanned object
      */
     public final String scanObject(final String color, final String smell,
-                                     final String sound, final Map map, final CommandInput command) {
+                                     final String sound, final Map map,
+                                     final CommandInput command) {
         String result;
 
         if (energyPoints - SCAN_ENERGY_COST < 0) {
-            return "ERROR: Not enough battery left. Cannot perform action";
+            return "ERROR: Not enough energy to perform action";
         }
-
         if (!color.equals("none") && !smell.equals("none") && sound.equals("none")) {
             result = "The scanned object is a plant.";
             if (map.getCell(x, y).getPlant() == null) {
@@ -149,7 +162,7 @@ public class Robot {
             energyPoints -= SCAN_ENERGY_COST;
 
             Plant scannedPlant = map.getCell(x, y).getPlant();
-            scannedPlant.setGrowing(true);
+            scannedPlant.setScanned(true);
             double growthRate = 0;
 
             if (map.getCell(x, y).getWater() != null) {
@@ -189,5 +202,90 @@ public class Robot {
             map.addScannedWater(scannedWater);
         }
         return result;
+    }
+
+    /**
+     * Learns a fact about a subject.
+     * @param subject The subject to learn about
+     * @param component The component to analyze
+     * @param map The map containing entities
+     * @return A message describing the learned fact
+     */
+    public final String learnFact(final String subject, final String component,
+                                   final Map map) {
+        if (energyPoints - LEARN_ENERGY_COST < 0) {
+            return "ERROR: Not enough battery left. Cannot perform action";
+        }
+        boolean isScanned = false;
+        Cell cell = map.getCell(x, y);
+
+        if (cell.getPlant() != null && cell.getPlant().getName().equals(component) && cell.getPlant().isScanned())
+            isScanned = true;
+
+        if (cell.getWater() != null && cell.getWater().getName().equals(component) && cell.getWater().isScanned())
+            isScanned = true;
+
+        if (cell.getAnimal() != null && cell.getAnimal().getName().equals(component) && cell.getAnimal().isScanned())
+            isScanned = true;
+
+        if (!isScanned)
+            return "ERROR: Subject not yet saved. Cannot perform action";
+
+        knowledgeBase.putIfAbsent(component, new ArrayList<>());
+        knowledgeBase.get(component).add(subject);
+        energyPoints -= LEARN_ENERGY_COST;
+        return "The fact has been successfully saved in the database.";
+    }
+
+    /**
+     * Improves the environment.
+     * @param improvementType The type of improvement
+     * @param type The entity type
+     * @param name The entity name
+     * @param map The map containing entities
+     * @return A message describing the improvement
+     */
+    public final String improveEnvironment(final String improvementType,
+                                            final String type, final String name,
+                                            final Map map) {
+        if (energyPoints - IMPROVE_ENERGY_COST < 0) {
+            return "ERROR: Not enough battery left. Cannot perform action";
+        }
+        if (knowledgeBase.get(name) == null) {
+            return "ERROR: Subject not yet saved. Cannot perform action";
+        }
+        List<String> improvements = knowledgeBase.get(name);
+
+        if (improvementType.equals("plantVegetation")) {
+            for (String improvement : improvements) {
+                if (improvement.contains("plant")) {
+                    map.getCell(x, y).getAir().addOxygen(0.3);
+                    energyPoints -= IMPROVE_ENERGY_COST;
+                    return "The " + name + " was planted successfully.";
+                }
+            }
+        }
+
+        if (improvementType.equals("fertilize")) {
+            for (String improvement : improvements) {
+                if (improvement.contains("soil")) {
+                    map.getCell(x, y).getSoil().setOrganicMatter(ORGANIC_MATTER);
+                    map.getCell(x, y).getSoil().calculateQuality();
+                    energyPoints -= IMPROVE_ENERGY_COST;
+                    return "The soil was fertilized successfully.";
+                }
+            }
+        }
+
+        if (improvementType.equals("increaseMoisture")) {
+            for (String improvement : improvements) {
+                if (improvement.contains("increaseMoisture")) {
+                    map.getCell(x, y).getSoil().addWaterRetention(WATER_RETENTION_INCREMENT);
+                    energyPoints -= IMPROVE_ENERGY_COST;
+                    return "The moisture was successfully increased using " + name;
+                }
+            }
+        }
+        return "ERROR: Fact not yet saved. Cannot perform action";
     }
 }
