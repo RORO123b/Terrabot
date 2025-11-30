@@ -223,11 +223,11 @@ public final class Main {
 
                     if (simulationActive && map != null) {
                         map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot, command, lastTimestamp);
                     }
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot, command, lastTimestamp);
                         String moveResult = robot.moveRobot(map);
                         commandNode.put("message", moveResult);
                     } else if (robot != null && robot.getIsCharging()) {
@@ -248,11 +248,11 @@ public final class Main {
 
                     if (simulationActive && map != null) {
                         map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot, command, lastTimestamp);
                     }
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot, command, lastTimestamp);
                         robot.rechargeBattery(command.getTimeToCharge(), command.getTimestamp());
                         commandNode.put("message", "Robot battery is charging.");
                     } else if (robot != null && robot.getIsCharging()) {
@@ -273,11 +273,11 @@ public final class Main {
 
                     if (simulationActive && map != null) {
                         map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot, command, lastTimestamp);
                     }
 
                     if (simulationActive && map != null && robot != null
                             && !robot.getIsCharging()) {
-                        map.updateEntities(robot, command, lastTimestamp);
                         commandNode.put("message",
                                 "TerraBot has " + robot.getEnergyPoints() + " energy points left.");
                     } else if (robot != null && robot.getIsCharging()) {
@@ -374,6 +374,7 @@ public final class Main {
                     }
                     if (simulationActive && map != null) {
                         map.checkWeatherFinished(command.getTimestamp());
+                        map.updateEntities(robot, command, lastTimestamp);
                     }
                     String subject = command.getSubject();
                     String component = command.getComponents();
@@ -388,7 +389,6 @@ public final class Main {
                         commandNode.put("message",
                                 "ERROR: Simulation not started. Cannot perform action");
                     }
-                    map.updateEntities(robot, command, lastTimestamp);
                     commandNode.put("timestamp", command.getTimestamp());
                     lastTimestamp = command.getTimestamp();
                     break;
@@ -714,6 +714,7 @@ public final class Main {
         water.setType(input.getType());
         water.setName(input.getName());
         water.setMass(input.getMass());
+        water.calculateWaterQuality();
         return water;
     }
 
@@ -808,4 +809,3 @@ public final class Main {
         return node;
     }
 }
-

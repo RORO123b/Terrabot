@@ -29,7 +29,9 @@ public class TropicalAir extends Air {
      */
     public void setAirQuality() {
         airQuality = (oxygenLevel * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
-                - (co2Level * CO2_FACTOR) + (rainfall * RAINFALL_FACTOR);
+                - (co2Level * CO2_FACTOR);
+        airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
+        airQuality += (rainfall * RAINFALL_FACTOR);
         airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
     }
     /**

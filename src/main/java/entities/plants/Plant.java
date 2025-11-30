@@ -44,7 +44,7 @@ public abstract class Plant extends Entity {
      */
     public void calculateOxygenLevel() {
         setOxygenLevel();
-        this.oxygenLevel = this.oxygenLevel + this.maturityOxygenRate;
+        oxygenLevel = oxygenLevel + maturityOxygenRate;
     }
 
     /**

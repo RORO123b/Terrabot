@@ -30,8 +30,9 @@ public class MountainAir extends Air {
     public void setAirQuality() {
         double oxygenFactor = oxygenLevel - ((altitude / ALTITUDE_DIVISOR)
                 * ALTITUDE_FACTOR);
-        airQuality = (oxygenFactor * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
-                - (numberOfHikers * HIKER_FACTOR);
+        airQuality = (oxygenFactor * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR);
+        airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
+        airQuality -= (numberOfHikers * HIKER_FACTOR);
         airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
     }
 

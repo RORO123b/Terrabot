@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 
 public final class Map {
-    private static final int WEATHER_DURATION = 3;
+    private static final int WEATHER_DURATION = 2;
     private static final int DIRECTIONS = 4;
     private static final double ORGANIC_MATTER_CARNIVORE_BOTH = 0.8;
     private static final double ORGANIC_MATTER_CARNIVORE_PLANT = 0.5;
@@ -179,109 +179,12 @@ public final class Map {
     }
 
     /**
-     * Prints detailed debug information for all cells in the map.
-     * Shows position, air, soil, water, plant, and animal attributes.
-     */
-    public void printDebugMap() {
-        System.out.println("\n========== DEBUG MAP ==========");
-        System.out.println("Map Size: " + width + " x " + height);
-        System.out.println("Scanned Plants: " + scannedPlants.size());
-        System.out.println("Scanned Waters: " + scannedWaters.size());
-        System.out.println("Scanned Animals: " + scannedAnimals.size());
-        System.out.println("===============================\n");
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                Cell cell = cells[i][j];
-                System.out.println(">>> CELL [" + j + ", " + i + "] <<<");
-                System.out.println("  Total Objects: " + cell.totalObjects());
-                System.out.println("  Air Quality: " + cell.getAirQuality());
-                System.out.println("  Soil Quality: " + cell.getSoilQuality());
-
-                if (cell.getAir() != null) {
-                    Air air = cell.getAir();
-                    System.out.println("  AIR:");
-                    System.out.println("    Type: " + air.getType());
-                    System.out.println("    Air Quality (numeric): " + air.getAirQuality());
-                    System.out.println("    Humidity: " + air.getHumidity());
-                    System.out.println("    Temperature: " + air.getTemperature());
-                    System.out.println("    Oxygen Level: " + air.getOxygenLevel());
-                } else {
-                    System.out.println("  AIR: null");
-                }
-
-                if (cell.getSoil() != null) {
-                    var soil = cell.getSoil();
-                    System.out.println("  SOIL:");
-                    System.out.println("    Type: " + soil.getType());
-                    System.out.println("    Quality (numeric): " + soil.calculateQuality());
-                    System.out.println("    Organic Matter: " + soil.getOrganicMatter());
-                    System.out.println("    Water Retention: " + soil.getWaterRetention());
-                    System.out.println("    Nitrogen: " + soil.getNitrogen());
-                    System.out.println("    Soil pH: " + soil.getSoilpH());
-                } else {
-                    System.out.println("  SOIL: null");
-                }
-
-                if (cell.getWater() != null) {
-                    Water water = cell.getWater();
-                    System.out.println("  WATER:");
-                    System.out.println("    Type: " + water.getType());
-                    System.out.println("    Water Quality: " + water.getWaterQuality());
-                    System.out.println("    Mass: " + water.getMass());
-                    System.out.println("    Scanned: " + water.isScanned());
-                    System.out.println("    In Scanned List: " + scannedWaters.contains(water));
-                } else {
-                    System.out.println("  WATER: null");
-                }
-
-                if (cell.getPlant() != null) {
-                    Plant plant = cell.getPlant();
-                    System.out.println("  PLANT:");
-                    System.out.println("    Type: " + plant.getType());
-                    System.out.println("    Mass: " + plant.getMass());
-                    System.out.println("    Growing: " + plant.isScanned());
-                    System.out.println("    Growth Rate: " + plant.getGrowthRate());
-                    System.out.println("    Growth Capacity: " + plant.getGrowthCapacity());
-                    System.out.println("    Oxygen Level: " + plant.getOxygenLevel());
-                    System.out.println("    In Scanned List: " + scannedPlants.contains(plant));
-                } else {
-                    System.out.println("  PLANT: null");
-                }
-
-                if (cell.getAnimal() != null) {
-                    Animal animal = cell.getAnimal();
-                    System.out.println("  ANIMAL:");
-                    System.out.println("    Type: " + animal.getType());
-                    System.out.println("    Mass: " + animal.getMass());
-                    System.out.println("    State: " + animal.getState());
-                    System.out.println("    Scanned: " + animal.isScanned());
-                    System.out.println("    Sick: " + animal.isSick());
-                    System.out.println("    Next Update: " + animal.getNextUpdate());
-                    System.out.println("    Carnivore/Parasite: " + animal.isCarnivoreOrParasite());
-                    System.out.println("    Organic Matter to Add: "
-                            + animal.getOrganicMatterToAdd());
-                    System.out.println("    In Scanned List: " + scannedAnimals.contains(animal));
-                } else {
-                    System.out.println("  ANIMAL: null");
-                }
-
-                System.out.println("  Weather Timestamp Finished: "
-                        + cell.getTimestampWeatherFinished());
-                System.out.println();
-            }
-        }
-        System.out.println("========== END DEBUG MAP ==========\n");
-    }
-
-    /**
      * Moves a scanned animal to the best adjacent cell based on food availability.
      * @param animal The animal to move
-     * @param timestamp The timestamp for the move
      * @param currentX The current x coordinate of the animal
      * @param currentY The current y coordinate of the animal
      */
-    public void moveAnimal(final Animal animal, final int timestamp,
+    public void moveAnimal(final Animal animal,
                           final int currentX, final int currentY) {
         int[] dx = {0, 1, 0, -1};
         int[] dy = {1, 0, -1, 0};
@@ -314,7 +217,6 @@ public final class Map {
         if (bestCell != null) {
             cells[currentY][currentX].setAnimal(null);
             bestCell.setAnimal(animal);
-            animal.setNextUpdate(timestamp + 2);
             return;
         }
         bestWaterQuality = Double.MIN_VALUE;
@@ -337,7 +239,6 @@ public final class Map {
         if (bestCell != null) {
             cells[currentY][currentX].setAnimal(null);
             bestCell.setAnimal(animal);
-            animal.setNextUpdate(timestamp + 2);
             return;
         }
         bestWaterQuality = Double.MIN_VALUE;
@@ -362,7 +263,6 @@ public final class Map {
         if (bestCell != null) {
             cells[currentY][currentX].setAnimal(null);
             bestCell.setAnimal(animal);
-            animal.setNextUpdate(timestamp + 2);
             return;
         }
         bestWaterQuality = Double.MIN_VALUE;
@@ -384,8 +284,6 @@ public final class Map {
             cells[currentY][currentX].setAnimal(null);
             bestCell.setAnimal(animal);
         }
-
-        animal.setNextUpdate(timestamp + 2);
     }
 
     /**
@@ -395,7 +293,7 @@ public final class Map {
      * @param currentY The y coordinate of the animal
      */
     public void feedAnimal(final Animal animal, final int currentX,
-                          final int currentY) {
+                            final int currentY) {
         Cell cell = cells[currentY][currentX];
         animal.setOrganicMatterToAdd(0.0);
 
@@ -532,7 +430,6 @@ public final class Map {
                     }
                 }
             }
-
             for (Animal animal : scannedAnimals) {
                 for (int i = 0; i < height; i++) {
                     for (int j = 0; j < width; j++) {
@@ -552,15 +449,9 @@ public final class Map {
                             }
 
                             if (animal.getNextUpdate() <= t) {
-                                moveAnimal(animal, t, j, i);
-                                for (int ci = 0; ci < height; ci++) {
-                                    for (int cj = 0; cj < width; cj++) {
-                                        if (cells[ci][cj].getAnimal() == animal) {
-                                            feedAnimal(animal, cj, ci);
-                                            break;
-                                        }
-                                    }
-                                }
+                                feedAnimal(animal, j, i);
+                                moveAnimal(animal, j, i);
+                                animal.setNextUpdate(t + 2);
                             }
                             break;
                         }

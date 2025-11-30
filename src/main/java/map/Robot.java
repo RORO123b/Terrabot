@@ -22,6 +22,7 @@ public class Robot {
     private static final double SOIL_GROWTH_RATE = 0.2;
     private static final double ORGANIC_MATTER = 0.3;
     private static final double WATER_RETENTION_INCREMENT = 0.2;
+    private static final double HUMIDITY_INCREMENT = 0.2;
     private static final int IMPROVE_ENERGY_COST = 10;
 
     private int x;
@@ -29,11 +30,8 @@ public class Robot {
     private int energyPoints;
     private boolean isCharging = false;
     private int timestampReady = -1;
-
-    private List<Plant> scannedPlants = new ArrayList<>();
-    private List<Water> scannedWaters = new ArrayList<>();
-    private List<Animal> scannedAnimals = new ArrayList<>();
     private LinkedHashMap<String, List<String>> knowledgeBase = new LinkedHashMap<>();
+    private List<String> inventory = new ArrayList<>();
 
     public Robot(final int energyPoints) {
         x = 0;
@@ -53,7 +51,6 @@ public class Robot {
         int bestX = x;
         int bestY = y;
 
-        System.out.println("THE ROBOT HAS " + energyPoints);
         for (int k = 0; k < DIRECTIONS; k++) {
             int total = 2;
             int tempX = x + dx[k];
@@ -92,7 +89,6 @@ public class Robot {
                         + possibilityToBeAttackedByAnimal + possibilityToGetStuckInPlants;
                 double mean = Math.abs(sum / total);
                 int result = (int) Math.round(mean);
-                System.out.println("RESULT for (" + tempX + ", " + tempY + ") is " + result);
 
                 if (result < minn && energyPoints >= result) {
                     minn = result;
@@ -162,6 +158,8 @@ public class Robot {
             energyPoints -= SCAN_ENERGY_COST;
 
             Plant scannedPlant = map.getCell(x, y).getPlant();
+
+            inventory.add(scannedPlant.getName());
             scannedPlant.setScanned(true);
             double growthRate = 0;
 
@@ -186,6 +184,7 @@ public class Robot {
             energyPoints -= SCAN_ENERGY_COST;
             Animal scannedAnimal = map.getCell(x, y).getAnimal();
 
+            inventory.add(scannedAnimal.getName());
             scannedAnimal.setScanned(true);
             scannedAnimal.setNextUpdate(command.getTimestamp() + 2);
             map.addScannedAnimal(scannedAnimal);
@@ -197,6 +196,7 @@ public class Robot {
             energyPoints -= SCAN_ENERGY_COST;
             Water scannedWater = map.getCell(x, y).getWater();
 
+            inventory.add(scannedWater.getName());
             scannedWater.setScanned(true);
             scannedWater.setNextUpdate(command.getTimestamp() + 2);
             map.addScannedWater(scannedWater);
@@ -217,16 +217,13 @@ public class Robot {
             return "ERROR: Not enough battery left. Cannot perform action";
         }
         boolean isScanned = false;
-        Cell cell = map.getCell(x, y);
 
-        if (cell.getPlant() != null && cell.getPlant().getName().equals(component) && cell.getPlant().isScanned())
-            isScanned = true;
-
-        if (cell.getWater() != null && cell.getWater().getName().equals(component) && cell.getWater().isScanned())
-            isScanned = true;
-
-        if (cell.getAnimal() != null && cell.getAnimal().getName().equals(component) && cell.getAnimal().isScanned())
-            isScanned = true;
+        for (String item : inventory) {
+            if (item.equals(component)) {
+                isScanned = true;
+                break;
+            }
+        }
 
         if (!isScanned)
             return "ERROR: Subject not yet saved. Cannot perform action";
@@ -248,11 +245,15 @@ public class Robot {
     public final String improveEnvironment(final String improvementType,
                                             final String type, final String name,
                                             final Map map) {
+
         if (energyPoints - IMPROVE_ENERGY_COST < 0) {
             return "ERROR: Not enough battery left. Cannot perform action";
         }
-        if (knowledgeBase.get(name) == null) {
+        if (!(inventory.contains(name))) {
             return "ERROR: Subject not yet saved. Cannot perform action";
+        }
+        if (knowledgeBase.get(name) == null) {
+            return "ERROR: Fact not yet saved. Cannot perform action";
         }
         List<String> improvements = knowledgeBase.get(name);
 
@@ -261,18 +262,20 @@ public class Robot {
                 if (improvement.contains("plant")) {
                     map.getCell(x, y).getAir().addOxygen(0.3);
                     energyPoints -= IMPROVE_ENERGY_COST;
+                    inventory.remove(name);
                     return "The " + name + " was planted successfully.";
                 }
             }
         }
 
-        if (improvementType.equals("fertilize")) {
+        if (improvementType.equals("fertilizeSoil")) {
             for (String improvement : improvements) {
-                if (improvement.contains("soil")) {
+                if (improvement.contains("fertilize")) {
                     map.getCell(x, y).getSoil().setOrganicMatter(ORGANIC_MATTER);
                     map.getCell(x, y).getSoil().calculateQuality();
                     energyPoints -= IMPROVE_ENERGY_COST;
-                    return "The soil was fertilized successfully.";
+                    inventory.remove(name);
+                    return "The soil was successfully fertilized using " + name;
                 }
             }
         }
@@ -282,7 +285,20 @@ public class Robot {
                 if (improvement.contains("increaseMoisture")) {
                     map.getCell(x, y).getSoil().addWaterRetention(WATER_RETENTION_INCREMENT);
                     energyPoints -= IMPROVE_ENERGY_COST;
+                    inventory.remove(name);
                     return "The moisture was successfully increased using " + name;
+                }
+            }
+        }
+
+        if (improvementType.equals("increaseHumidity")) {
+            for (String improvement : improvements) {
+                if (improvement.contains("humidity")) {
+                    map.getCell(x, y).getAir().setHumidity(
+                            map.getCell(x, y).getAir().getHumidity() + HUMIDITY_INCREMENT);
+                    energyPoints -= IMPROVE_ENERGY_COST;
+                    inventory.remove(name);
+                    return "The humidity was successfully increased using " + name;
                 }
             }
         }

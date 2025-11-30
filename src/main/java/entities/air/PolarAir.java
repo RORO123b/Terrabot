@@ -29,7 +29,9 @@ public class PolarAir extends Air {
      */
     public void setAirQuality() {
         airQuality = (oxygenLevel * OXYGEN_FACTOR) + (TEMP_FACTOR - Math.abs(temperature))
-                - (iceCrystalConcentration * ICE_FACTOR) - (windSpeed * WIND_FACTOR);
+                - (iceCrystalConcentration * ICE_FACTOR);
+        airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
+        airQuality -= (windSpeed * WIND_FACTOR);
         airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
     }
 

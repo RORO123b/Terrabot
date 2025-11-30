@@ -29,8 +29,9 @@ public class TemperateAir extends Air {
      */
     public void setAirQuality() {
         airQuality = (oxygenLevel * OXYGEN_FACTOR) + (humidity * HUMIDITY_FACTOR)
-                - (pollenLevel * POLLEN_FACTOR)
-                - (season.equalsIgnoreCase("Spring") ? SPRING_PENALTY : 0);
+                - (pollenLevel * POLLEN_FACTOR);
+        airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
+        airQuality -= (season.equalsIgnoreCase("Spring") ? SPRING_PENALTY : 0);
         airQuality = Math.max(0, Math.min(MAX_QUALITY, airQuality));
     }
 
