@@ -16,6 +16,20 @@ public class TropicalAir extends Air {
     private double co2Level;
     private double rainfall;
 
+    public TropicalAir(final String type, final String name, final double mass,
+                       final double humidity, final double temperature,
+                       final double oxygenLevel, final double co2Level) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.humidity = humidity;
+        this.temperature = temperature;
+        this.oxygenLevel = oxygenLevel;
+        this.co2Level = co2Level;
+        setAirQuality();
+        calculateToxicityAQ();
+    }
+
     /**
      * Gets the maximum score for tropical air.
      * @return The maximum score

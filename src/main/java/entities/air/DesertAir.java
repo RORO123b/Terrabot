@@ -16,6 +16,20 @@ public class DesertAir extends Air {
     private double dustParticles;
     private boolean desertStorm;
 
+    public DesertAir(final String type, final String name, final double mass,
+                     final double humidity, final double temperature,
+                     final double oxygenLevel, final double dustParticles) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.humidity = humidity;
+        this.temperature = temperature;
+        this.oxygenLevel = oxygenLevel;
+        this.dustParticles = dustParticles;
+        setAirQuality();
+        calculateToxicityAQ();
+    }
+
     /**
      * Gets the maximum score for desert air.
      * @return The maximum score

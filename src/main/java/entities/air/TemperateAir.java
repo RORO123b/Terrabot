@@ -16,6 +16,20 @@ public class TemperateAir extends Air {
     private double pollenLevel;
     private String season = "";
 
+    public TemperateAir(final String type, final String name, final double mass,
+                        final double humidity, final double temperature,
+                        final double oxygenLevel, final double pollenLevel) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.humidity = humidity;
+        this.temperature = temperature;
+        this.oxygenLevel = oxygenLevel;
+        this.pollenLevel = pollenLevel;
+        setAirQuality();
+        calculateToxicityAQ();
+    }
+
     /**
      * Gets the maximum score for temperate air.
      * @return The maximum score

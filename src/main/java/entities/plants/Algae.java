@@ -4,11 +4,13 @@ public class Algae extends Plant {
     private static final double POSSIBILITY = 20;
     private static final double OXYGEN = 0.5;
 
-    public Algae(final String name) {
-        type = "Algae";
+    public Algae(final String name, final double mass) {
+        this.type = "Algae";
         this.name = name;
+        this.mass = mass;
         plantPossibility = POSSIBILITY;
         oxygenLevel = OXYGEN;
+        setMaturityOxygenRate("Young");
         calculateOxygenLevel();
     }
 

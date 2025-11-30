@@ -15,6 +15,20 @@ public class DesertSoil extends Soil {
 
     private double salinity;
 
+    public DesertSoil(final String type, final String name, final double mass,
+                      final double nitrogen, final double waterRetention,
+                      final double soilpH, final double organicMatter, final double salinity) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.nitrogen = nitrogen;
+        this.waterRetention = waterRetention;
+        this.soilpH = soilpH;
+        this.organicMatter = organicMatter;
+        this.salinity = salinity;
+        calculateQuality();
+    }
+
     /**
      * Calculates the raw quality score for desert soil.
      * @return The raw quality score

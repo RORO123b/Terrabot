@@ -4,11 +4,13 @@ public class FloweringPlants extends Plant {
     private static final double POSSIBILITY = 90;
     private static final double OXYGEN = 6.0;
 
-    public FloweringPlants(final String name) {
-        type = "FloweringPlants";
+    public FloweringPlants(final String name, final double mass) {
+        this.type = "FloweringPlants";
         this.name = name;
+        this.mass = mass;
         plantPossibility = POSSIBILITY;
         oxygenLevel = OXYGEN;
+        setMaturityOxygenRate("Young");
         calculateOxygenLevel();
     }
 

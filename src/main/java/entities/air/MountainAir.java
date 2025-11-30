@@ -16,6 +16,21 @@ public class MountainAir extends Air {
 
     private double altitude;
     private double numberOfHikers;
+    
+    public MountainAir(final String type, final String name, final double mass,
+                       final double humidity, final double temperature,
+                       final double oxygenLevel, final double altitude) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.humidity = humidity;
+        this.temperature = temperature;
+        this.oxygenLevel = oxygenLevel;
+        this.altitude = altitude;
+        setAirQuality();
+        calculateToxicityAQ();
+    }
+    
     /**
      * Gets the maximum score for mountain air.
      * @return The maximum score

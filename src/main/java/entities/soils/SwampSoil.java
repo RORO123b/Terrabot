@@ -14,6 +14,20 @@ public class SwampSoil extends Soil {
 
     private double waterLogging;
 
+    public SwampSoil(final String type, final String name, final double mass,
+                     final double nitrogen, final double waterRetention,
+                     final double soilpH, final double organicMatter, final double waterLogging) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.nitrogen = nitrogen;
+        this.waterRetention = waterRetention;
+        this.soilpH = soilpH;
+        this.organicMatter = organicMatter;
+        this.waterLogging = waterLogging;
+        calculateQuality();
+    }
+
     /**
      * Calculates the raw quality score for swamp soil
      * @return The raw quality score

@@ -16,6 +16,20 @@ public class PolarAir extends Air {
     private double iceCrystalConcentration;
     private double windSpeed;
 
+    public PolarAir(final String type, final String name, final double mass,
+                    final double humidity, final double temperature,
+                    final double oxygenLevel, final double iceCrystalConcentration) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.humidity = humidity;
+        this.temperature = temperature;
+        this.oxygenLevel = oxygenLevel;
+        this.iceCrystalConcentration = iceCrystalConcentration;
+        setAirQuality();
+        calculateToxicityAQ();
+    }
+
     /**
      * Gets the maximum score for polar air.
      * @return The maximum score

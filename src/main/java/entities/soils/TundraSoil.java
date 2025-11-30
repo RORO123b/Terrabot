@@ -15,6 +15,20 @@ public class TundraSoil extends Soil {
 
     private double permafrostDepth;
 
+    public TundraSoil(final String type, final String name, final double mass,
+                      final double nitrogen, final double waterRetention,
+                      final double soilpH, final double organicMatter, final double permafrostDepth) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.nitrogen = nitrogen;
+        this.waterRetention = waterRetention;
+        this.soilpH = soilpH;
+        this.organicMatter = organicMatter;
+        this.permafrostDepth = permafrostDepth;
+        calculateQuality();
+    }
+
     /**
      * Calculates the raw quality score for tundra soil
      * @return The raw quality score

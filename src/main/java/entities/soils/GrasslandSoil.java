@@ -17,6 +17,20 @@ public class GrasslandSoil extends Soil {
 
     private double rootDensity;
 
+    public GrasslandSoil(final String type, final String name, final double mass,
+                         final double nitrogen, final double waterRetention,
+                         final double soilpH, final double organicMatter, final double rootDensity) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.nitrogen = nitrogen;
+        this.waterRetention = waterRetention;
+        this.soilpH = soilpH;
+        this.organicMatter = organicMatter;
+        this.rootDensity = rootDensity;
+        calculateQuality();
+    }
+
     /**
      * Calculates the raw quality score for grassland soil
      * @return The raw quality score

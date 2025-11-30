@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Robot {
+public final class Robot {
     private static final int DIRECTIONS = 4;
     private static final int SCAN_ENERGY_COST = 7;
     private static final int LEARN_ENERGY_COST = 2;
@@ -24,6 +24,7 @@ public class Robot {
     private static final double WATER_RETENTION_INCREMENT = 0.2;
     private static final double HUMIDITY_INCREMENT = 0.2;
     private static final int IMPROVE_ENERGY_COST = 10;
+    private static final double OXYGEN_INCREMENT = 0.3;
 
     private int x;
     private int y;
@@ -225,8 +226,9 @@ public class Robot {
             }
         }
 
-        if (!isScanned)
+        if (!isScanned) {
             return "ERROR: Subject not yet saved. Cannot perform action";
+        }
 
         knowledgeBase.putIfAbsent(component, new ArrayList<>());
         knowledgeBase.get(component).add(subject);
@@ -260,7 +262,7 @@ public class Robot {
         if (improvementType.equals("plantVegetation")) {
             for (String improvement : improvements) {
                 if (improvement.contains("plant")) {
-                    map.getCell(x, y).getAir().addOxygen(0.3);
+                    map.getCell(x, y).getAir().addOxygen(OXYGEN_INCREMENT);
                     energyPoints -= IMPROVE_ENERGY_COST;
                     inventory.remove(name);
                     return "The " + name + " was planted successfully.";

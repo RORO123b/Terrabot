@@ -9,11 +9,11 @@ import lombok.Setter;
 public class Omnivore extends Animal {
     private static final int ANIMAL_POSIBILITY_TO_ATTACK = 60;
 
-    public Omnivore(final String name, final int mass) {
+    public Omnivore(final String name, final double mass) {
         super();
         this.name = name;
         this.mass = mass;
-        type = "Omnivores";
+        this.type = "Omnivores";
         animalPossibility = ANIMAL_POSIBILITY_TO_ATTACK;
     }
 }

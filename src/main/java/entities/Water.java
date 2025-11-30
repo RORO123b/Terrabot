@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import static java.lang.Math.abs;
 
+import fileio.WaterInput;
+
 @Setter
 @Getter
 public final class Water extends Entity {
@@ -35,6 +37,18 @@ public final class Water extends Entity {
     private boolean isScanned;
     private int nextUpdate;
 
+    public Water(final WaterInput input) {
+        this.type = input.getType();
+        this.name = input.getName();
+        this.mass = input.getMass();
+        this.purity = input.getPurity();
+        this.pH = input.getPH();
+        this.salinity = input.getSalinity();
+        this.turbidity = input.getTurbidity();
+        this.contaminantIndex = input.getContaminantIndex();
+        this.isFrozen = input.isFrozen();
+        this.calculateWaterQuality();
+    }
     /**
      * Calculates the normalized water quality based on formula
      */

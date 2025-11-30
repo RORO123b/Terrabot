@@ -18,6 +18,20 @@ public class ForestSoil extends Soil {
 
     private double leafLitter;
 
+    public ForestSoil(final String type, final String name, final double mass,
+                      final double nitrogen, final double waterRetention,
+                      final double soilpH, final double organicMatter, final double leafLitter) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.nitrogen = nitrogen;
+        this.waterRetention = waterRetention;
+        this.soilpH = soilpH;
+        this.organicMatter = organicMatter;
+        this.leafLitter = leafLitter;
+        calculateQuality();
+    }
+
     /**
      * Calculates the raw quality score for forest soil
      * @return The raw quality score

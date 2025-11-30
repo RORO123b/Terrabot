@@ -9,11 +9,11 @@ import lombok.Setter;
 public class Herbivore extends Animal {
     private static final int ANIMAL_POSIBILITY_TO_ATTACK = 85;
 
-    public Herbivore(final String name, final int mass) {
+    public Herbivore(final String name, final double mass) {
         super();
         this.name = name;
         this.mass = mass;
-        type = "Herbivores";
+        this.type = "Herbivores";
         animalPossibility = ANIMAL_POSIBILITY_TO_ATTACK;
     }
 }
