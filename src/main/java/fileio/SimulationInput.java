@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public final class SimulationInput {
+public class SimulationInput {
     private String territoryDim;
     private int energyPoints;
     private TerritorySectionParamsInput territorySectionParams;

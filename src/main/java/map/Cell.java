@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public final class Cell {
+public class Cell {
 
     private static final double QUALITY_LOW = 40.0;
     private static final double QUALITY_MEDIUM = 70.0;
@@ -24,7 +24,7 @@ public final class Cell {
     private Water water;
     private String airQuality;
     private String soilQuality;
-    private int timestampWeatherFinished = -1;
+    private int timestampWeatherFinished;
 
     /**
      * Constructor for Cell class.
@@ -35,6 +35,7 @@ public final class Cell {
     public Cell(final int x, final int y) {
         this.y = y;
         this.x = x;
+        timestampWeatherFinished = -1;
     }
 
     /**

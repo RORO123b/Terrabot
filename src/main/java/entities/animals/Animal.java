@@ -13,12 +13,16 @@ public abstract class Animal extends Entity {
     public static final double INTAKE_RATE = 0.08;
 
     protected double animalPossibility;
-    protected boolean isScanned = false;
+    protected boolean isScanned;
     protected int nextUpdate;
-    protected boolean isSick = false;
-    protected String state = "hungry";
-    protected double organicMatterToAdd = 0.0;
+    protected boolean isSick;
+    protected String state;
+    protected double organicMatterToAdd;
 
+    public Animal() {
+        super();
+        state = "hungry";
+    }
     /**
      * Gets the possibility to be attacked by an animal.
      * @return The possibility as a decimal value

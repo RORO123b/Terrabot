@@ -19,7 +19,7 @@ public final class ImproveEnvironment implements Command {
         }
         if (simulationActive && map != null) {
             map.checkWeatherFinished(command.getTimestamp());
-            map.updateEntities(robot, command, lastTimestamp);
+            map.updateEntities(command, lastTimestamp);
         }
         String improvementType = command.getImprovementType();
         String type = command.getType();

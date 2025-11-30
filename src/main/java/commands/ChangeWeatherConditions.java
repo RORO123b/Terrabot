@@ -16,7 +16,7 @@ public final class ChangeWeatherConditions implements Command {
 
         if (simulationActive && map != null) {
             map.checkWeatherFinished(command.getTimestamp());
-            map.updateEntities(robot, command, lastTimestamp);
+            map.updateEntities(command, lastTimestamp);
             String type = command.getType();
             double value = 0;
             String season = null;

@@ -5,7 +5,7 @@ public class FloweringPlants extends Plant {
     private static final double OXYGEN = 6.0;
 
     public FloweringPlants(final String name, final double mass) {
-        this.type = "FloweringPlants";
+        type = "FloweringPlants";
         this.name = name;
         this.mass = mass;
         plantPossibility = POSSIBILITY;

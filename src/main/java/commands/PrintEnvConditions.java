@@ -24,7 +24,7 @@ public final class PrintEnvConditions implements Command {
         }
 
         if (simulationActive && map != null && robot != null && !robot.getIsCharging()) {
-            map.updateEntities(robot, command, lastTimestamp);
+            map.updateEntities(command, lastTimestamp);
             Cell currentCell = map.getCell(robot.getX(), robot.getY());
             ObjectNode envOutput = mapper.createObjectNode();
 

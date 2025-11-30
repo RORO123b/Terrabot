@@ -17,7 +17,8 @@ public class TundraSoil extends Soil {
 
     public TundraSoil(final String type, final String name, final double mass,
                       final double nitrogen, final double waterRetention,
-                      final double soilpH, final double organicMatter, final double permafrostDepth) {
+                      final double soilpH, final double organicMatter,
+                      final double permafrostDepth) {
         this.type = type;
         this.name = name;
         this.mass = mass;

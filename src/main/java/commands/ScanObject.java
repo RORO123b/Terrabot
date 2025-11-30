@@ -6,7 +6,7 @@ import fileio.CommandInput;
 import map.Map;
 import map.Robot;
 
-public class ScanObject implements Command {
+public final class ScanObject implements Command {
     @Override
     public ObjectNode executeCommand(final ObjectMapper mapper, final CommandInput command,
                                     final Map map, final Robot robot,
@@ -19,7 +19,7 @@ public class ScanObject implements Command {
         }
         if (simulationActive && map != null) {
             map.checkWeatherFinished(command.getTimestamp());
-            map.updateEntities(robot, command, lastTimestamp);
+            map.updateEntities(command, lastTimestamp);
         }
         String color = command.getColor();
         String smell = command.getSmell();

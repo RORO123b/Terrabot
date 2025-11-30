@@ -26,11 +26,11 @@ public abstract class Plant extends Entity {
      */
     public void setMaturityOxygenRate(final String status) {
         if (status.equals("Young")) {
-            this.maturityOxygenRate = YOUNG_RATE;
+            maturityOxygenRate = YOUNG_RATE;
         } else if (status.equals("Mature")) {
-            this.maturityOxygenRate = MATURE_RATE;
+            maturityOxygenRate = MATURE_RATE;
         } else if (status.equals("Old")) {
-            this.maturityOxygenRate = OLD_RATE;
+            maturityOxygenRate = OLD_RATE;
         }
     }
 

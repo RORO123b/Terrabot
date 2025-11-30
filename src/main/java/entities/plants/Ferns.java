@@ -5,7 +5,7 @@ public class Ferns extends Plant {
 
     public Ferns(final String name, final double mass) {
         this.name = name;
-        this.type = "Ferns";
+        type = "Ferns";
         this.mass = mass;
         plantPossibility = POSSIBILITY;
         oxygenLevel = 0;
@@ -18,6 +18,6 @@ public class Ferns extends Plant {
      */
     @Override
     public void setOxygenLevel() {
-        this.oxygenLevel = 0;
+        oxygenLevel = 0;
     }
 }

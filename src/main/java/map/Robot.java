@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public final class Robot {
+public class Robot {
     private static final int DIRECTIONS = 4;
     private static final int SCAN_ENERGY_COST = 7;
     private static final int LEARN_ENERGY_COST = 2;
@@ -29,14 +29,17 @@ public final class Robot {
     private int x;
     private int y;
     private int energyPoints;
-    private boolean isCharging = false;
-    private int timestampReady = -1;
-    private LinkedHashMap<String, List<String>> knowledgeBase = new LinkedHashMap<>();
-    private List<String> inventory = new ArrayList<>();
+    private boolean isCharging;
+    private int timestampReady;
+    private LinkedHashMap<String, List<String>> knowledgeBase;
+    private List<String> inventory;
 
     public Robot(final int energyPoints) {
         x = 0;
         y = 0;
+        knowledgeBase = new LinkedHashMap<>();
+        inventory = new ArrayList<>();
+        timestampReady = -1;
         this.energyPoints = energyPoints;
     }
 

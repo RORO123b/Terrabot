@@ -13,7 +13,7 @@ public class Herbivore extends Animal {
         super();
         this.name = name;
         this.mass = mass;
-        this.type = "Herbivores";
+        type = "Herbivores";
         animalPossibility = ANIMAL_POSIBILITY_TO_ATTACK;
     }
 }

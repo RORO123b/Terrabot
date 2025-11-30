@@ -13,7 +13,7 @@ public class Omnivore extends Animal {
         super();
         this.name = name;
         this.mass = mass;
-        this.type = "Omnivores";
+        type = "Omnivores";
         animalPossibility = ANIMAL_POSIBILITY_TO_ATTACK;
     }
 }

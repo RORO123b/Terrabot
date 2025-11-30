@@ -2,7 +2,7 @@
  * The class contains the minimum of constants needed.
  * You can define your own constants here or create separate files.
  */
-public final class CheckerConstants {
+public class CheckerConstants {
     private CheckerConstants() {
     }
 

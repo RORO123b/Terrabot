@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public final class Map {
+public class Map {
     private static final int WEATHER_DURATION = 2;
     private static final int DIRECTIONS = 4;
     private static final double ORGANIC_MATTER_CARNIVORE_BOTH = 0.8;
@@ -31,15 +31,17 @@ public final class Map {
     private Cell[][] cells;
     private final int height;
     private final int width;
-    private List<Plant> scannedPlants = new ArrayList<>();
-    private List<Water> scannedWaters = new ArrayList<>();
-    private List<Animal> scannedAnimals = new ArrayList<>();
+    private List<Plant> scannedPlants;
+    private List<Water> scannedWaters;
+    private List<Animal> scannedAnimals;
 
     public Map(final int height, final int width) {
         this.height = height;
         this.width = width;
         cells = new Cell[height][width];
-
+        scannedPlants = new ArrayList<>();
+        scannedWaters = new ArrayList<>();
+        scannedAnimals = new ArrayList<>();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 cells[i][j] = new Cell(j, i);
@@ -84,7 +86,6 @@ public final class Map {
      *
      * @param type the new weather type
      * @param value the numeric value for weather change
-     * @param season the season string for weather change
      * @param timestamp the timestamp for weather change
      */
 
@@ -149,7 +150,12 @@ public final class Map {
         }
     }
 
-    public boolean hasTypeOfWeather(final String type) {
+    /**
+     * Checks if the map has a specific type of weather.
+     * @param type The type of air to check
+     * @return true if the air type exists, false otherwise
+     */
+    public final boolean hasTypeOfWeather(final String type) {
         List<Cell> cellsOfType = getCellsByAirType(type);
         return !cellsOfType.isEmpty();
     }
@@ -383,7 +389,7 @@ public final class Map {
      * @param command The command with current timestamp
      * @param lastTimestamp The last processed timestamp
      */
-    public void updateEntities(final Robot robot, final CommandInput command,
+    public void updateEntities(final CommandInput command,
                               final int lastTimestamp) {
         int currentTimestamp = command.getTimestamp();
         for (int t = lastTimestamp + 1; t <= currentTimestamp; t++) {

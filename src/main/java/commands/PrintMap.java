@@ -8,7 +8,7 @@ import map.Cell;
 import map.Map;
 import map.Robot;
 
-public class PrintMap implements Command {
+public final class PrintMap implements Command {
     @Override
     public ObjectNode executeCommand(final ObjectMapper mapper, final CommandInput command,
                                     final Map map, final Robot robot,
@@ -25,7 +25,7 @@ public class PrintMap implements Command {
         }
 
         if (simulationActive && map != null && robot != null && !robot.getIsCharging()) {
-            map.updateEntities(robot, command, lastTimestamp);
+            map.updateEntities(command, lastTimestamp);
             ArrayNode mapOutput = mapper.createArrayNode();
 
             for (int y = 0; y < map.getHeight(); y++) {

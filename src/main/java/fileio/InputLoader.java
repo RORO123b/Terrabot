@@ -16,7 +16,7 @@ import java.util.List;
  * Students should implement deeper parsing themselves.
  */
 @Getter
-public final class InputLoader {
+public class InputLoader {
     private final ArrayList<SimulationInput> simulations;
     private final ArrayList<CommandInput> commands;
 
@@ -31,7 +31,7 @@ public final class InputLoader {
     @Data
     @NoArgsConstructor
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static final class InputRoot {
+    public static class InputRoot {
         private List<SimulationInput> simulationParams;
         private List<CommandInput> commands;
     }

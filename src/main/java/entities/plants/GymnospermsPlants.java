@@ -4,7 +4,7 @@ public class GymnospermsPlants extends Plant {
     private static final double POSSIBILITY = 60;
 
     public GymnospermsPlants(final String name, final double mass) {
-        this.type = "GymnospermsPlants";
+        type = "GymnospermsPlants";
         this.name = name;
         this.mass = mass;
         plantPossibility = POSSIBILITY;
@@ -18,6 +18,6 @@ public class GymnospermsPlants extends Plant {
      */
     @Override
     public void setOxygenLevel() {
-        this.oxygenLevel = 0;
+        oxygenLevel = 0;
     }
 }

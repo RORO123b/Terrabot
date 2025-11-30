@@ -20,7 +20,7 @@ public final class MoveRobot implements Command {
 
         if (simulationActive && map != null) {
             map.checkWeatherFinished(command.getTimestamp());
-            map.updateEntities(robot, command, lastTimestamp);
+            map.updateEntities(command, lastTimestamp);
         }
 
         if (simulationActive && map != null && robot != null && !robot.getIsCharging()) {

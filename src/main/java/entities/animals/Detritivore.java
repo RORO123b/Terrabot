@@ -13,7 +13,7 @@ public class Detritivore extends Animal {
         super();
         this.name = name;
         this.mass = mass;
-        this.type = "Detritivores";
+        type = "Detritivores";
         animalPossibility = ANIMAL_POSIBILITY_TO_ATTACK;
     }
 }

@@ -30,11 +30,7 @@ public class DesertAir extends Air {
         calculateToxicityAQ();
     }
 
-    /**
-     * Gets the maximum score for desert air.
-     * @return The maximum score
-     */
-    public int getMaxScore() {
+    public final int getMaxScore() {
         return (int) MAX_SCORE_VALUE;
     }
 
@@ -54,8 +50,8 @@ public class DesertAir extends Air {
      * @param desertStorm Whether there is a desert storm
      */
     @Override
-    public void changeWeather(final boolean desertStorm) {
-        this.desertStorm = desertStorm;
+    public void changeWeather(final boolean storm) {
+        this.desertStorm = storm;
 
         setAirQuality();
     }

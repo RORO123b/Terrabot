@@ -14,7 +14,7 @@ public class TemperateAir extends Air {
     private static final double SPRING_PENALTY = 15;
 
     private double pollenLevel;
-    private String season = "";
+    private String season;
 
     public TemperateAir(final String type, final String name, final double mass,
                         final double humidity, final double temperature,
@@ -26,15 +26,12 @@ public class TemperateAir extends Air {
         this.temperature = temperature;
         this.oxygenLevel = oxygenLevel;
         this.pollenLevel = pollenLevel;
+        season = "";
         setAirQuality();
         calculateToxicityAQ();
     }
 
-    /**
-     * Gets the maximum score for temperate air.
-     * @return The maximum score
-     */
-    public int getMaxScore() {
+    public final int getMaxScore() {
         return (int) MAX_SCORE_VALUE;
     }
 
@@ -54,8 +51,8 @@ public class TemperateAir extends Air {
      * @param season The season name
      */
     @Override
-    public void changeWeather(final String season) {
-        this.season = season;
+    public void changeWeather(final String newSeason) {
+        this.season = newSeason;
         setAirQuality();
     }
 }

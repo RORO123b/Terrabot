@@ -5,7 +5,7 @@ public class Algae extends Plant {
     private static final double OXYGEN = 0.5;
 
     public Algae(final String name, final double mass) {
-        this.type = "Algae";
+        type = "Algae";
         this.name = name;
         this.mass = mass;
         plantPossibility = POSSIBILITY;
@@ -19,6 +19,6 @@ public class Algae extends Plant {
      */
     @Override
     public void setOxygenLevel() {
-        this.oxygenLevel = OXYGEN;
+        oxygenLevel = OXYGEN;
     }
 }

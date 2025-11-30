@@ -19,7 +19,8 @@ public class GrasslandSoil extends Soil {
 
     public GrasslandSoil(final String type, final String name, final double mass,
                          final double nitrogen, final double waterRetention,
-                         final double soilpH, final double organicMatter, final double rootDensity) {
+                         final double soilpH, final double organicMatter,
+                         final double rootDensity) {
         this.type = type;
         this.name = name;
         this.mass = mass;

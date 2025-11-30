@@ -29,18 +29,10 @@ public abstract class Air extends Entity {
      */
     public abstract void setAirQuality();
 
-    /**
-     * Gets the rounded air quality value
-     * @return The rounded air quality
-     */
-    public double getAirQuality() {
+    public final double getAirQuality() {
         return Math.round(airQuality * PERCENT) / PERCENT;
     }
 
-    /**
-     * Gets the rounded oxygen level value.
-     * @return The rounded oxygen level
-     */
     public final double getOxygenLevel() {
         return Math.round(oxygenLevel * PERCENT) / PERCENT;
     }
@@ -94,10 +86,6 @@ public abstract class Air extends Entity {
         calculateToxicityAQ();
     }
 
-    /**
-     * Gets the humidity level.
-     * @return The humidity value
-     */
     public final double getHumidity() {
         return Math.round(humidity * PERCENT) / PERCENT;
     }

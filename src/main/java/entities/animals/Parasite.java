@@ -13,7 +13,7 @@ public class Parasite extends Animal {
         super();
         this.name = name;
         this.mass = mass;
-        this.type = "Parasites";
+        type = "Parasites";
         animalPossibility = ANIMAL_POSIBILITY_TO_ATTACK;
     }
 }

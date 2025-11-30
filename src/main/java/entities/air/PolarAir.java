@@ -30,11 +30,7 @@ public class PolarAir extends Air {
         calculateToxicityAQ();
     }
 
-    /**
-     * Gets the maximum score for polar air.
-     * @return The maximum score
-     */
-    public int getMaxScore() {
+    public final int getMaxScore() {
         return (int) MAX_SCORE_VALUE;
     }
 
@@ -53,7 +49,6 @@ public class PolarAir extends Air {
      * Changes weather by setting wind speed.
      * @param speed The wind speed value
      */
-
     @Override
     public void changeWeather(final double speed) {
         this.windSpeed = speed;

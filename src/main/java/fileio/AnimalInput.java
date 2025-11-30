@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public final class AnimalInput {
+public class AnimalInput {
     private String type;
     private String name;
     private double mass;

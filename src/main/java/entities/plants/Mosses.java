@@ -6,7 +6,7 @@ public class Mosses extends Plant {
 
     public Mosses(final String name, final double mass) {
         this.name = name;
-        this.type = "Mosses";
+        type = "Mosses";
         this.mass = mass;
         plantPossibility = POSSIBILITY;
         oxygenLevel = OXYGEN;
@@ -19,6 +19,6 @@ public class Mosses extends Plant {
      */
     @Override
     public void setOxygenLevel() {
-        this.oxygenLevel = OXYGEN;
+        oxygenLevel = OXYGEN;
     }
 }

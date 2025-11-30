@@ -9,7 +9,7 @@ import fileio.WaterInput;
 
 @Setter
 @Getter
-public final class Water extends Entity {
+public class Water extends Entity {
 
     private static final double MAX_PURITY = 100.0;
     private static final double IDEAL_PH = 7.5;
@@ -38,16 +38,16 @@ public final class Water extends Entity {
     private int nextUpdate;
 
     public Water(final WaterInput input) {
-        this.type = input.getType();
-        this.name = input.getName();
-        this.mass = input.getMass();
-        this.purity = input.getPurity();
-        this.pH = input.getPH();
-        this.salinity = input.getSalinity();
-        this.turbidity = input.getTurbidity();
-        this.contaminantIndex = input.getContaminantIndex();
-        this.isFrozen = input.isFrozen();
-        this.calculateWaterQuality();
+        type = input.getType();
+        name = input.getName();
+        mass = input.getMass();
+        purity = input.getPurity();
+        pH = input.getPH();
+        salinity = input.getSalinity();
+        turbidity = input.getTurbidity();
+        contaminantIndex = input.getContaminantIndex();
+        isFrozen = input.isFrozen();
+        calculateWaterQuality();
     }
     /**
      * Calculates the normalized water quality based on formula

@@ -19,7 +19,7 @@ public final class LearnFact implements Command {
         }
         if (simulationActive && map != null) {
             map.checkWeatherFinished(command.getTimestamp());
-            map.updateEntities(robot, command, lastTimestamp);
+            map.updateEntities(command, lastTimestamp);
         }
         String subject = command.getSubject();
         String component = command.getComponents();

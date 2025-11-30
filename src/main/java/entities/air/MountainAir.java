@@ -16,7 +16,6 @@ public class MountainAir extends Air {
 
     private double altitude;
     private double numberOfHikers;
-    
     public MountainAir(final String type, final String name, final double mass,
                        final double humidity, final double temperature,
                        final double oxygenLevel, final double altitude) {
@@ -30,12 +29,8 @@ public class MountainAir extends Air {
         setAirQuality();
         calculateToxicityAQ();
     }
-    
-    /**
-     * Gets the maximum score for mountain air.
-     * @return The maximum score
-     */
-    public int getMaxScore() {
+
+    public final int getMaxScore() {
         return (int) MAX_SCORE_VALUE;
     }
 
@@ -56,8 +51,8 @@ public class MountainAir extends Air {
      * @param numberOfHikers The number of hikers
      */
     @Override
-    public void changeWeather(final double numberOfHikers) {
-        this.numberOfHikers = numberOfHikers;
+    public void changeWeather(final double hikers) {
+        this.numberOfHikers = hikers;
         setAirQuality();
     }
 }
