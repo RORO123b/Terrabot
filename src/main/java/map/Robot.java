@@ -215,8 +215,7 @@ public class Robot {
      * @param map The map containing entities
      * @return A message describing the learned fact
      */
-    public final String learnFact(final String subject, final String component,
-                                   final Map map) {
+    public final String learnFact(final String subject, final String component) {
         if (energyPoints - LEARN_ENERGY_COST < 0) {
             return "ERROR: Not enough battery left. Cannot perform action";
         }

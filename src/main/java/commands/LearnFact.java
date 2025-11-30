@@ -24,7 +24,7 @@ public final class LearnFact implements Command {
         String subject = command.getSubject();
         String component = command.getComponents();
         if (simulationActive && map != null && robot != null && !robot.getIsCharging()) {
-            String learnResult = robot.learnFact(subject, component, map);
+            String learnResult = robot.learnFact(subject, component);
             commandNode.put("message", learnResult);
         } else if (robot != null && robot.getIsCharging()) {
             commandNode.put("message",

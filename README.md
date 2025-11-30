@@ -1,48 +1,81 @@
-
-
 # Tema 1 POO  - TerraBot
 
-<div align="center"><img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWZxaTdmdTFoczU5ZW90eTFsN2FwMG5lbDl5dDl5MHBucTB1a2NnZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/voirD51GFZte0/giphy.gif" width="500px"></div>
+## Structura temei
 
-#### Assignment Link: [https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema](https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema)
+Tema este alcatuita din 4 pachete care contin mai multe clase si subpachete:
+- main -> contine clasa main
+- commands -> contine comenzile necesare pentru rezolvarea temei
+- entities -> contine toate clasele de entitati
+  - animals -> contine toate clasele si subclasele animalelor
+  - air -> contine toate clasele si subclasele aerului
+  - plants -> contine toate clasele si subclasele plantelor
+  - soil -> contine toate clasele si subclasele pamantului
+  - Entity -> super clasa
+  - Water -> subclasa la entity
+- map -> contine toate clasele care tin de harta (harta, celula, robot)
 
+## Rezolvarea temei
 
-## Skel Structure
+### Main
+  - pentru fiecare comanda am creat o clasa anonima cu care contine comanda respectiva si o apelez pentru a face JSON output
+  - ce mai este notabil este partea de start simulation in care initializez harta, robotul si incrementez indexul simularii
 
-* src/
-    * checker/ - checker files
-    * fileio/ - contains classes used to read data from the json files
-    * main/
-        * Main - the Main class runs the checker on your implementation. Add the entry point to your implementation in it. Run Main to test your implementation from the IDE or from command line.
-        * Test - run the main method from Test class with the name of the input file from the command line and the result will be written
-          to the out.txt file. Thus, you can compare this result with ref.
-* input/ - contains the tests in JSON format
-* ref/ - contains all reference output for the tests in JSON format
+### Commands
+  - am considerat sa creez o interfata numita Command care o implementeaza fiecare comanda pentru a putea fi executata
+  - am creat o clasa CommandHelper care ma ajuta sa creez nodurile pentru JSON output
+  
+  - #### StartSimulation
+    - initializez obiectul map punandu-i dimensiunile si adaugand in fiecare celula entitatile corespunzatoare
+    - in metodele createAnimal, createPlant, createSoil folosesc switch case pe type pentru a crea tipul corespunzator
+  
+  - #### EndSimulation
+    - afisez mesajul potrivit si fac boolean-ul de simulare activa fals
+  
+  - #### ChangeWeatherConditions
+    - folosesc de un switch case pentru determinarea tipului de schimbare a vremii
+    - am creat metoda changeWeather in cadrul clasei Map caruia ii dau **overload** pentru a putea schimba vremea celulelor potrivite
+  
+  - #### MoveRobot
+    - am creat metoda moveRobot in cadrul clasei Robot pentru a face miscarea
+    - ma folosesc de 2 vectori de directie pentru a gasi celula pe care robotul se va muta
+  
+  - #### RechargeBattery
+    - am creat metoda rechargeBattery in cadrul clasei Robot care adauga energia si pune un timestamp pana la cat sa se incarce
+    - verific la fiecare comanda daca robotul se mai incarca
+  
+  - #### ScanObject
+    - in robot scanez obiectul, determin ce am scanat si il adaug in inventar
+    - in map adaug entitatea scanata in una dintre cele 3 ArrayList (scannedPlants, scannedWaters, scannedAnimals) si pun timestamp-ul la care trebuie updatat
+    - updateEntities:
+      - el este updatat si pentru timestampurile intermediare care nu apar in input (folosind lastTimestamp)
+      - pentru plante cauta planta ce trebuie sa creasca si updatez campurile celulei
+      - similar apa
+      - caut animalul, updatez celula cu organicMatter si il hranesc si apoi il mut
+      - algoritmul pentru hranire este impartit in 2 subcazuri: pentru carnivori si paraziti, restul animalelor
+      - el este implementat conform cerintei, iar pentru eliminarea entitatii mancate voi seta acea entitate cu null
+      - algoritmul pentru miscarea animalului se foloseste de 2 vectori de directie pentru a determina celula potrivita
+      - ele sunt updatate in functie de campul nextUpdate din cadrul fiecarui tip de entitate
+  
+  - #### LearnFact
+    - iterez prin inventarul robotului si adaug in knowledgeBase
+    - pentru implementarea knowledgeBaseului ma folosesc de un LinkedHashMap care are ca cheie component si ca valoare o lista de subiecte (stringuri)
+    
+  - #### ImproveEnvironment
+    - robotul verifica daca are in knowledgeBase si inventar ce-i trebuie pentru a imbunatati celula pe care se afla si o face
+  
+  - #### getEnergyStatus
+    - returneaza cata energie are robotul
 
-## Tests
+  - #### PrintEnvConditions
+    - pune in output campurile necesare, folosind CommandHelper
+  
+  - #### PrintMap
+    - similar doar ca iterez prin harta
+  
+  - #### PrintKnowledgeBase
+    - iterez prin knowledgeBase si afisez
 
-1. test01_initialize_entities 3p
-2. test02_initialize_entities_errors - 2p
-3. test03__move_robot - 5p
-4. test04_move_robot_errors – 2p
-5. test05_env_condition - 2p
-6. test06_update_battery - 3p
-7. test07_update_battery_errors 2p
-8. test08_change_weather - 3p
-9. test09_scan_plant 3p
-10. test10_scan_water 5p
-11. test11_scan_animal - 6p
-12. test12_scan_object_errors – 2p
-13. test13_learn_fact - 4p
-14. test14_improve_environment - 5p
-15. test15_improve_environment_errors – 2p
-16. test16_mid - 6p
-17. test17_multiple_simulations - 3p
-18. test18_multiple_simulations_error - 2p
-19. test19_complex_simple - 6p
-20. test20_complex_errors - 6p
-21. test21_complex_combined - 8p
+## Folosirea LLM-urilor
+- am utilizat LLM-urile pentru numirea unor variabile globale (nu eram prea inspirat la denumire) si a unor clase (Command si CommandHelper)
+- la unul dintre teste uitasem sa calculez calitatea apei cand creez apa in constructor si a gasit el greseala
 
-
-
-<div align="center"><img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWt2djVodmJsc3E1c2RqdWc3emV4aGU5OWVrd2g5ZDFvNHdnOHY1MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/HTCp5FBZ3vEXLDoNOm/giphy.gif" width="500px"></div>
