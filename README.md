@@ -1,81 +1,76 @@
-# Tema 1 POO  - TerraBot
+# TerraBot
 
-## Structura temei
+## Project Structure
 
-Tema este alcatuita din 4 pachete care contin mai multe clase si subpachete:
-- main -> contine clasa main
-- commands -> contine comenzile necesare pentru rezolvarea temei
-- entities -> contine toate clasele de entitati
-  - animals -> contine toate clasele si subclasele animalelor
-  - air -> contine toate clasele si subclasele aerului
-  - plants -> contine toate clasele si subclasele plantelor
-  - soil -> contine toate clasele si subclasele pamantului
-  - Entity -> super clasa
-  - Water -> subclasa la entity
-- map -> contine toate clasele care tin de harta (harta, celula, robot)
+The project consists of 4 packages containing multiple classes and subpackages:
+- main -> contains the main class
+- commands -> contains the necessary commands for solving the assignment
+- entities -> contains all entity classes
+  - animals -> contains all animal classes and subclasses
+  - air -> contains all air classes and subclasses
+  - plants -> contains all plant classes and subclasses
+  - soil -> contains all soil classes and subclasses
+  - Entity -> super class
+  - Water -> subclass of entity
+- map -> contains all classes related to the map (map, cell, robot)
 
-## Rezolvarea temei
+## Solution Implementation
 
 ### Main
-  - pentru fiecare comanda am creat o clasa anonima cu care contine comanda respectiva si o apelez pentru a face JSON output
-  - ce mai este notabil este partea de start simulation in care initializez harta, robotul si incrementez indexul simularii
+  - for each command I created an anonymous class that contains the respective command and I call it to produce JSON output
+  - what's also notable is the start simulation part where I initialize the map, the robot and increment the simulation index
 
 ### Commands
-  - am considerat sa creez o interfata numita Command care o implementeaza fiecare comanda pentru a putea fi executata
-  - am creat o clasa CommandHelper care ma ajuta sa creez nodurile pentru JSON output
+  - I decided to create an interface called Command which is implemented by each command to be executed
+  - I created a CommandHelper class that helps me create nodes for JSON output
   
   - #### StartSimulation
-    - initializez obiectul map punandu-i dimensiunile si adaugand in fiecare celula entitatile corespunzatoare
-    - in metodele createAnimal, createPlant, createSoil folosesc switch case pe type pentru a crea tipul corespunzator
+    - I initialize the map object by setting its dimensions and adding the corresponding entities to each cell
+    - in the createAnimal, createPlant, createSoil methods I use switch case on type to create the corresponding type
   
   - #### EndSimulation
-    - afisez mesajul potrivit si fac boolean-ul de simulare activa fals
+    - I display the appropriate message and set the active simulation boolean to false
   
   - #### ChangeWeatherConditions
-    - folosesc de un switch case pentru determinarea tipului de schimbare a vremii
-    - am creat metoda changeWeather in cadrul clasei Map caruia ii dau **overload** pentru a putea schimba vremea celulelor potrivite
+    - I use a switch case to determine the type of weather change
+    - I created the changeWeather method in the Map class which I **overload** to be able to change the weather of the appropriate cells
   
   - #### MoveRobot
-    - am creat metoda moveRobot in cadrul clasei Robot pentru a face miscarea
-    - ma folosesc de 2 vectori de directie pentru a gasi celula pe care robotul se va muta
+    - I created the moveRobot method in the Robot class to perform the movement
+    - I use 2 direction vectors to find the cell the robot will move to
   
   - #### RechargeBattery
-    - am creat metoda rechargeBattery in cadrul clasei Robot care adauga energia si pune un timestamp pana la cat sa se incarce
-    - verific la fiecare comanda daca robotul se mai incarca
+    - I created the rechargeBattery method in the Robot class which adds energy and sets a timestamp until when it should charge
+    - I check at each command if the robot is still charging
   
   - #### ScanObject
-    - in robot scanez obiectul, determin ce am scanat si il adaug in inventar
-    - in map adaug entitatea scanata in una dintre cele 3 ArrayList (scannedPlants, scannedWaters, scannedAnimals) si pun timestamp-ul la care trebuie updatat
+    - in robot I scan the object, determine what I scanned and add it to inventory
+    - in map I add the scanned entity to one of the 3 ArrayLists (scannedPlants, scannedWaters, scannedAnimals) and set the timestamp at which it should be updated
     - updateEntities:
-      - el este updatat si pentru timestampurile intermediare care nu apar in input (folosind lastTimestamp)
-      - pentru plante cauta planta ce trebuie sa creasca si updatez campurile celulei
-      - similar apa
-      - caut animalul, updatez celula cu organicMatter si il hranesc si apoi il mut
-      - algoritmul pentru hranire este impartit in 2 subcazuri: pentru carnivori si paraziti, restul animalelor
-      - el este implementat conform cerintei, iar pentru eliminarea entitatii mancate voi seta acea entitate cu null
-      - algoritmul pentru miscarea animalului se foloseste de 2 vectori de directie pentru a determina celula potrivita
-      - ele sunt updatate in functie de campul nextUpdate din cadrul fiecarui tip de entitate
+      - it is updated also for intermediate timestamps that don't appear in input (using lastTimestamp)
+      - for plants it searches for the plant that should grow and I update the cell fields
+      - similar for water
+      - I search for the animal, update the cell with organicMatter and feed it then move it
+      - the feeding algorithm is divided into 2 subcases: for carnivores and parasites, the rest of the animals
+      - it is implemented according to the requirements, and to remove the eaten entity I will set that entity to null
+      - the algorithm for animal movement uses 2 direction vectors to determine the appropriate cell
+      - they are updated based on the nextUpdate field within each entity type
   
   - #### LearnFact
-    - iterez prin inventarul robotului si adaug in knowledgeBase
-    - pentru implementarea knowledgeBaseului ma folosesc de un LinkedHashMap care are ca cheie component si ca valoare o lista de subiecte (stringuri)
+    - I iterate through the robot's inventory and add to knowledgeBase
+    - for the knowledgeBase implementation I use a LinkedHashMap which has component as key and a list of subjects (strings) as value
     
   - #### ImproveEnvironment
-    - robotul verifica daca are in knowledgeBase si inventar ce-i trebuie pentru a imbunatati celula pe care se afla si o face
+    - the robot checks if it has in knowledgeBase and inventory what it needs to improve the cell it's on and does it
   
   - #### getEnergyStatus
-    - returneaza cata energie are robotul
+    - returns how much energy the robot has
 
   - #### PrintEnvConditions
-    - pune in output campurile necesare, folosind CommandHelper
+    - puts the necessary fields in output, using CommandHelper
   
   - #### PrintMap
-    - similar doar ca iterez prin harta
+    - similar but I iterate through the map
   
   - #### PrintKnowledgeBase
-    - iterez prin knowledgeBase si afisez
-
-## Folosirea LLM-urilor
-- am utilizat LLM-urile pentru numirea unor variabile globale (nu eram prea inspirat la denumire) si a unor clase (Command si CommandHelper)
-- la unul dintre teste uitasem sa calculez calitatea apei cand creez apa in constructor si a gasit el greseala
-
+    - I iterate through knowledgeBase and display
